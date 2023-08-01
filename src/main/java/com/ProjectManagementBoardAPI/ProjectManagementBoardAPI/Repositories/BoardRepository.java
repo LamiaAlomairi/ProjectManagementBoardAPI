@@ -21,4 +21,7 @@ public interface BoardRepository extends JpaRepository<Board, String> {
     @Query("UPDATE Board b SET b.id = :newId, b.title = :newTitle WHERE b.id = :oldId")
     void updateBoard(@Param("oldId") String oldId, @Param("newId") String newId, @Param("newTitle") String newTitle);
 
+    @Modifying
+    @Query("DELETE FROM Board b WHERE b.id = :boardId")
+    void deleteBoardById(@Param("boardId") Long id);
 }
