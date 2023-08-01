@@ -54,4 +54,13 @@ public class BoardService {
             System.out.println("Cannot update Board: " + e.getMessage());
         }
     }
+
+    /****** Delete Board ******/
+    public void deleteBoardById(Long id) {
+        try {
+            boardRepository.deleteBoardById(id);
+        } catch (Exception e) {
+            System.out.println("Cannot delete playlist: " + e.getMessage());
+        }
+    }
 }
