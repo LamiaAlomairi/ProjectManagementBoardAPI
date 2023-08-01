@@ -40,11 +40,9 @@ public class BoardController {
 
     /*******  Get Board by id  ******/
     @GetMapping(value = "/{id}")
-    public BoardResponseObject getBoardById(@PathVariable String id) {
+    public Board getBoardById(@PathVariable String id) {
         try {
-            Board board = boardService.getBoardById(id);
-            BoardResponseObject convertedBoard = BoardResponseObject.convertToResponse(board);
-            return convertedBoard;
+            return boardService.getBoardById(id);
         } catch (Exception e) {
             System.err.println("Cannot get Board with this id " + e.getMessage());
             return null;
@@ -52,13 +50,14 @@ public class BoardController {
     }
 
     /****** Update Board ******/
-    @PutMapping("/{oldId}")
-    public void updateBoard(@PathVariable String oldId, @RequestBody BoardRequestObject boardRequest) {
+    @PutMapping("/{id}")
+    public Board updateBoard(@PathVariable String id, @RequestBody Board update) {
         try {
-            boardService.updateBoard(oldId, boardRequest.getId(), boardRequest.getTitle());
+            return boardService.updateBoard(id, update);
         } catch (Exception e) {
             System.err.println("Cannot update this Board: " + e.getMessage());
         }
+        return null;
     }
 
     /****** Delete Board ******/

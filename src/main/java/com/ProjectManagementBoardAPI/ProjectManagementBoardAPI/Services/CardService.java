@@ -5,8 +5,11 @@ import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Repositories.Card
 import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.RequestObject.CardRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CardService {
@@ -27,7 +30,7 @@ public class CardService {
     /*******  Get All Card  ******/
     public List<Card> getAllCards() {
         try {
-            return cardRepository.getAllCards();
+            return cardRepository.findAll();
         } catch (Exception e) {
             System.out.println("Cannot get all Cards " + e.getMessage());
             return null;
@@ -37,7 +40,7 @@ public class CardService {
     /*******  Get Card by id  ******/
     public Card getCardById(Integer id) {
         try {
-            return cardRepository.getCardById(id);
+            return cardRepository.findById(id).get();
         }
         catch (Exception e) {
             System.out.println("Cannot get all Card with this id " + e.getMessage());
@@ -46,18 +49,25 @@ public class CardService {
     }
 
     /****** Update Card ******/
-    public void updateCard(Integer id, String newTitle, String newDescription) {
+    public Card updateCard(@PathVariable Integer id, @RequestBody Card card) {
         try {
-            cardRepository.updateCard(id, newTitle, newDescription);
+            Optional<Card> optionalCard = cardRepository.findById(id);
+            if (optionalCard.isPresent()) {
+                Card existingCard = optionalCard.get();
+                existingCard.setTitle(card.getTitle());
+                existingCard.setDescription(card.getDescription());
+                return cardRepository.save(existingCard);
+            }
         } catch (Exception e) {
             System.out.println("Cannot update Card: " + e.getMessage());
         }
+        return null;
     }
 
     /****** Delete Card ******/
     public void deleteCardById(Integer id) {
         try {
-            cardRepository.deleteCardById(id);
+            cardRepository.deleteById(id);
         } catch (Exception e) {
             System.out.println("Cannot delete Card: " + e.getMessage());
         }

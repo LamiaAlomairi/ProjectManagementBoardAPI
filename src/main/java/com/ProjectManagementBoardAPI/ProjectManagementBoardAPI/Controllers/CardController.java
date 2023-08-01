@@ -40,11 +40,9 @@ public class CardController {
 
     /*******  Get Card by id  ******/
     @GetMapping(value = "/{id}")
-    public CardResponse getCardById(@PathVariable Integer id) {
+    public Card getCardById(@PathVariable Integer id) {
         try {
-            Card card = cardService.getCardById(id);
-            CardResponse convertedCard = CardResponse.convertToResponse(card);
-            return convertedCard;
+            return cardService.getCardById(id);
         } catch (Exception e) {
             System.err.println("Cannot get Card with this id " + e.getMessage());
             return null;
@@ -53,12 +51,13 @@ public class CardController {
 
     /****** Update Card ******/
     @PutMapping("/{id}")
-    public void updateCard(@PathVariable Integer id, @RequestBody CardRequest cardRequest) {
+    public Card updateCard(@PathVariable Integer id, @RequestBody Card card) {
         try {
-            cardService.updateCard(id, cardRequest.getTitle(), cardRequest.getDescription());
+            return cardService.updateCard(id, card);
         } catch (Exception e) {
             System.err.println("Cannot update this Card: " + e.getMessage());
         }
+        return null;
     }
 
     /****** Delete Card ******/

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BoardService {
@@ -27,7 +28,7 @@ public class BoardService {
     /*******  Get All Board  ******/
     public List<Board> getAllBoards() {
         try {
-            return boardRepository.getAllBoards();
+            return boardRepository.findAll();
         } catch (Exception e) {
             System.out.println("Cannot get all Boards " + e.getMessage());
             return null;
@@ -37,7 +38,7 @@ public class BoardService {
     /*******  Get Board by id  ******/
     public Board getBoardById(String id) {
         try {
-            return boardRepository.getBoardById(id);
+            return boardRepository.findById(id).get();
         }
         catch (Exception e) {
             System.out.println("Cannot get all Board with this id " + e.getMessage());
@@ -46,18 +47,24 @@ public class BoardService {
     }
 
     /****** Update Board ******/
-    public void updateBoard(String oldId, String newId, String newTitle) {
+    public Board updateBoard(String id, Board board) {
         try {
-            boardRepository.updateBoard(oldId, newId, newTitle);
+            Optional<Board> optionalBoard = boardRepository.findById(id);
+            if (optionalBoard.isPresent()) {
+                Board existingBoard = optionalBoard.get();
+                existingBoard.setTitle(board.getTitle());
+                return boardRepository.save(existingBoard);
+            }
         } catch (Exception e) {
             System.out.println("Cannot update Board: " + e.getMessage());
         }
+        return null;
     }
 
     /****** Delete Board ******/
     public void deleteBoardById(String id) {
         try {
-            boardRepository.deleteBoardById(id);
+            boardRepository.deleteById(id);
         } catch (Exception e) {
             System.out.println("Cannot delete Board: " + e.getMessage());
         }
