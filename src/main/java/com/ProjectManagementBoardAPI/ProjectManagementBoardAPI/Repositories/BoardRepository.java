@@ -22,6 +22,7 @@ public interface BoardRepository extends JpaRepository<Board, String> {
     void updateBoard(@Param("oldId") String oldId, @Param("newId") String newId, @Param("newTitle") String newTitle);
 
     @Modifying
+    @Transactional
     @Query("DELETE FROM Board b WHERE b.id = :boardId")
     void deleteBoardById(@Param("boardId") String id);
 }
