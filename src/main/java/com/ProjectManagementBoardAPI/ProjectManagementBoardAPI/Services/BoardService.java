@@ -33,4 +33,15 @@ public class BoardService {
             return null;
         }
     }
+
+    /*******  Get Board by id  ******/
+    public Board getBoardById(String id) {
+        try {
+            return boardRepository.getBoardById(id);
+        }
+        catch (Exception e) {
+            System.out.println("Cannot get all Board with this id " + e.getMessage());
+            return null;
+        }
+    }
 }
