@@ -11,7 +11,6 @@ import java.util.List;
 
 @Getter
 @Setter
-@Data
 public class BoardRequestObject {
     String id;
     String title;

@@ -11,7 +11,6 @@ import java.util.List;
 
 @Getter
 @Setter
-@Data
 @Builder
 public class BoardResponseObject {
     String id;
