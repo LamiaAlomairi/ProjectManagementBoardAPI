@@ -52,10 +52,10 @@ public class BoardController {
     }
 
     /****** Update Board ******/
-    @PutMapping("/{id}")
-    public void updateBoard(@PathVariable String id, @RequestBody BoardRequestObject boardRequest) {
+    @PutMapping("/{oldId}")
+    public void updateBoard(@PathVariable String oldId, @RequestBody BoardRequestObject boardRequest) {
         try {
-            boardService.updateBoard(id, boardRequest);
+            boardService.updateBoard(oldId, boardRequest.getId(), boardRequest.getTitle());
         } catch (Exception e) {
             System.err.println("Cannot update this Board: " + e.getMessage());
         }

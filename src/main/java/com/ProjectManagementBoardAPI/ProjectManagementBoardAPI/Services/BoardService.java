@@ -47,15 +47,11 @@ public class BoardService {
     }
 
     /****** Update Board ******/
-    public Board updateBoard(String id, BoardRequestObject boardRequest) {
-        Board board = boardRepository.getBoardById(id);
+    public void updateBoard(String oldId, String newId, String newTitle) {
         try {
-            board.setId(boardRequest.getId());
-            board.setTitle(boardRequest.getTitle());
+            boardRepository.updateBoard(oldId, newId, newTitle);
         } catch (Exception e) {
             System.out.println("Cannot update Board: " + e.getMessage());
         }
-        Board updateBoard = boardRepository.save(board);
-        return updateBoard;
     }
 }
