@@ -14,15 +14,15 @@ public interface CardRepository extends JpaRepository<Card, Integer> {
     List<Card> getAllCards();
 
     @Query(value = "select c from Card c where c.id = :cardId")
-    Card getCardById(@Param("cardId") String id);
+    Card getCardById(@Param("cardId") Integer id);
 
     @Modifying
     @Transactional
-    @Query("UPDATE Card c SET c.id = :newId, c.title = :newTitle, c.description = :newDescription WHERE c.id = :oldId")
-    void updateCard(@Param("oldId") String oldId, @Param("newId") String newId, @Param("newTitle") String newTitle, @Param("newDescription") String newDescription);
+    @Query("UPDATE Card c c.title = :newTitle, c.description = :newDescription WHERE c.id = :cardId")
+    void updateCard(@Param("cardId") Integer cardId, @Param("newTitle") String newTitle, @Param("newDescription") String newDescription);
 
     @Modifying
     @Transactional
     @Query("DELETE FROM Card c WHERE c.id = :cardId")
-    void deleteCardById(@Param("cardId") String id);
+    void deleteCardById(@Param("cardId") Integer id);
 }
