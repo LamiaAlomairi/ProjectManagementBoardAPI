@@ -6,6 +6,7 @@ import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.RequestObject.Boa
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -43,5 +44,18 @@ public class BoardService {
             System.out.println("Cannot get all Board with this id " + e.getMessage());
             return null;
         }
+    }
+
+    /****** Update Board ******/
+    public Board updateBoard(String id, BoardRequestObject boardRequest) {
+        Board board = boardRepository.getBoardById(id);
+        try {
+            board.setId(boardRequest.getId());
+            board.setTitle(boardRequest.getTitle());
+        } catch (Exception e) {
+            System.out.println("Cannot update Board: " + e.getMessage());
+        }
+        Board updateBoard = boardRepository.save(board);
+        return updateBoard;
     }
 }
