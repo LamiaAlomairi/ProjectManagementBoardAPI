@@ -6,7 +6,6 @@ import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.RequestObject.Boa
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -56,11 +55,11 @@ public class BoardService {
     }
 
     /****** Delete Board ******/
-    public void deleteBoardById(Long id) {
+    public void deleteBoardById(String id) {
         try {
             boardRepository.deleteBoardById(id);
         } catch (Exception e) {
-            System.out.println("Cannot delete playlist: " + e.getMessage());
+            System.out.println("Cannot delete Board: " + e.getMessage());
         }
     }
 }

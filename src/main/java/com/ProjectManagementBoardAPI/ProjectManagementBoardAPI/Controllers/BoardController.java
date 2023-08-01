@@ -60,4 +60,14 @@ public class BoardController {
             System.err.println("Cannot update this Board: " + e.getMessage());
         }
     }
+
+    /****** Delete Board ******/
+    @DeleteMapping(value = "/{id}")
+    public void deleteBoardById(@PathVariable String id) {
+        try {
+            boardService.deleteBoardById(id);
+        } catch (Exception e) {
+            System.err.println("Cannot delete Board: " + e.getMessage());
+        }
+    }
 }
