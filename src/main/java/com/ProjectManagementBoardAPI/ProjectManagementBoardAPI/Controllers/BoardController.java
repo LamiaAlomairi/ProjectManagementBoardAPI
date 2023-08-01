@@ -50,4 +50,14 @@ public class BoardController {
             return null;
         }
     }
+
+    /****** Update Board ******/
+    @PutMapping("/{id}")
+    public void updateBoard(@PathVariable String id, @RequestBody BoardRequestObject boardRequest) {
+        try {
+            boardService.updateBoard(id, boardRequest);
+        } catch (Exception e) {
+            System.err.println("Cannot update this Board: " + e.getMessage());
+        }
+    }
 }
