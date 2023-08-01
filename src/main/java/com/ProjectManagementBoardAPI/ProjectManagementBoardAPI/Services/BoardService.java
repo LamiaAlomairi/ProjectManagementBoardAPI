@@ -11,8 +11,14 @@ public class BoardService {
     @Autowired
     BoardRepository boardRepository;
 
-    public void addBoard(BoardRequestObject boardRequest){
-        Board board = BoardRequestObject.convert(boardRequest);
-        boardRepository.save(board);
+    /*******  Create Board  ******/
+    public void createBoard(BoardRequestObject boardRequest){
+        try{
+            Board board = BoardRequestObject.convert(boardRequest);
+            boardRepository.save(board);
+        }
+        catch (Exception e) {
+            System.out.println("Cannot create board " + e.getMessage());
+        }
     }
 }
