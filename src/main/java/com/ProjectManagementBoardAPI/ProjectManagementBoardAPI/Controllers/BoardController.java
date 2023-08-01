@@ -40,13 +40,12 @@ public class BoardController {
 
     /*******  Get Board by id  ******/
     @GetMapping(value = "/{id}")
-    public BoardResponseObject getBoardById(@RequestParam String id) {
+    public BoardResponseObject getBoardById(@PathVariable String id) {
         try {
             Board board = boardService.getBoardById(id);
             BoardResponseObject convertedBoard = BoardResponseObject.convertToResponse(board);
             return convertedBoard;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             System.err.println("Cannot get Board with this id " + e.getMessage());
             return null;
         }
