@@ -24,7 +24,7 @@ public class BoardService {
         }
     }
 
-    /*******  Get All Song  ******/
+    /*******  Get All Board  ******/
     public List<Board> getAllBoards() {
         try {
             return boardRepository.getAllBoards();
