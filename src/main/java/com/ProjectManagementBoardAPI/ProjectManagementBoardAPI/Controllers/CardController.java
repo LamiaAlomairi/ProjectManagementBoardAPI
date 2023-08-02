@@ -1,7 +1,6 @@
 package com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Controllers;
 
 import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Models.Card;
-import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.RequestObject.CardRequest;
 import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.ResponseObject.CardResponse;
 import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Services.CardService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +16,9 @@ public class CardController {
 
     /*******  Create Card  ******/
     @PostMapping
-    public void createCard(@RequestBody CardRequest cardRequest) {
+    public void createCard(@RequestBody Card card) {
         try {
-            cardService.createCard(cardRequest);
+            cardService.createCard(card);
         } catch (Exception e) {
             System.err.println("Cannot create card: " + e.getMessage());
         }

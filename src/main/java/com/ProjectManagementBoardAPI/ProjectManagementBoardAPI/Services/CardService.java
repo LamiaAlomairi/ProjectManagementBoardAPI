@@ -2,7 +2,6 @@ package com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Services;
 
 import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Models.Card;
 import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Repositories.CardRepository;
-import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.RequestObject.CardRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,9 +16,8 @@ public class CardService {
     CardRepository cardRepository;
 
     /*******  Create Card  ******/
-    public void createCard(CardRequest cardRequest){
+    public void createCard(Card card){
         try{
-            Card card = CardRequest.convert(cardRequest);
             cardRepository.save(card);
         }
         catch (Exception e) {

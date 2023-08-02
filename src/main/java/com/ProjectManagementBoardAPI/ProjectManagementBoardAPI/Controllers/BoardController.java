@@ -17,9 +17,9 @@ public class BoardController {
 
     /*******  Create Board  ******/
     @PostMapping
-    public void createBoard(@RequestBody BoardRequestObject boardRequest) {
+    public void createBoard(@RequestBody Board board) {
         try {
-            boardService.createBoard(boardRequest);
+            boardService.createBoard(board);
         } catch (Exception e) {
             System.err.println("Cannot create board: " + e.getMessage());
         }

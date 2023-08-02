@@ -8,7 +8,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "card")
-public class Card extends BaseEntity {
+public class Card {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;

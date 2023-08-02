@@ -13,7 +13,11 @@ public class Section {
     Integer id;
     String name;
 
-    @ManyToOne
-    @JoinColumn(name = "board_id")
-    private Board board;
+    public Section() {
+    }
+
+    public Section(String name, int id) {
+        this.name = name;
+        this.id = id;
+    }
 }

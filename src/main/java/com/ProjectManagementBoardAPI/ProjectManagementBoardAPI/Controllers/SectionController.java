@@ -3,6 +3,7 @@ package com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Controllers;
 import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Models.Section;
 import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Services.SectionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,6 +15,7 @@ public class SectionController {
     SectionService sectionService;
 
     /*******  Create Section  ******/
+    @PostMapping
     public Section createSection(@RequestBody Section section) {
         try {
             return sectionService.createSection(section);
