@@ -4,8 +4,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -16,21 +17,15 @@ public class Board {
     String id;
     String title;
 
-    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<BoardSection> sections = new ArrayList<>();
+    @ElementCollection
+    @CollectionTable(name = "board_sections", joinColumns = @JoinColumn(name = "board_id"))
+    @MapKeyColumn(name = "section_id")
+    @Column(name = "section_name")
+    private Map<Integer, String> sections = new HashMap<>();
 
-    @PostPersist
-    public void createSections() {
-        Section toDo = new Section("To Do", 1);
-        Section inProgress = new Section("In Progress", 2);
-        Section done = new Section("Done", 3);
+    @Transient
+    private List<Section> sectionsWithCards;
 
-        BoardSection toDoSection = new BoardSection(this, toDo);
-        BoardSection inProgressSection = new BoardSection(this, inProgress);
-        BoardSection doneSection = new BoardSection(this, done);
-
-        sections.add(toDoSection);
-        sections.add(inProgressSection);
-        sections.add(doneSection);
-    }
+//    @OneToMany(mappedBy = "board")
+//    private List<Card> cards;
 }

@@ -20,4 +20,14 @@ public class SectionService {
         }
         return null;
     }
+
+    /*******  Get Section by id  ******/
+    public Section getSectionById(Integer id) {
+        try {
+            return sectionRepository.findById(id).get();
+        } catch (Exception e) {
+            System.out.println("Cannot get Section with this id " + e.getMessage());
+            return null;
+        }
+    }
 }

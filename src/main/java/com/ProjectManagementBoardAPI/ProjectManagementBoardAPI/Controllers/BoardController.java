@@ -1,8 +1,6 @@
 package com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Controllers;
 
 import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Models.Board;
-import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.RequestObject.BoardRequestObject;
-import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.ResponseObject.BoardResponseObject;
 import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Services.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -27,16 +25,15 @@ public class BoardController {
 
     /*******  Get All Boards  ******/
     @GetMapping
-    public List<BoardResponseObject> getAllBoards() {
+    public List<Board> getAllBoards() {
         try {
-            List<Board> boards = boardService.getAllBoards();
-            List<BoardResponseObject> listOfConvertedBoards = BoardResponseObject.convertToResponseList(boards);
-            return listOfConvertedBoards;
+            return boardService.getAllBoards();
         } catch (Exception e) {
-            System.err.println("Cannot get all Boards " + e.getMessage());
+            System.err.println("Cannot get all Boards: " + e.getMessage());
             return null;
         }
     }
+
 
     /*******  Get Board by id  ******/
     @GetMapping(value = "/{id}")

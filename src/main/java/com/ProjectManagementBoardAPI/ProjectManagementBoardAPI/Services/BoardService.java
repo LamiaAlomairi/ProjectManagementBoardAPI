@@ -2,25 +2,37 @@ package com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Services;
 
 import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Models.Board;
 import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Repositories.BoardRepository;
-import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.RequestObject.BoardRequestObject;
+import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Repositories.SectionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
 public class BoardService {
     @Autowired
     BoardRepository boardRepository;
+    @Autowired
+    SectionRepository sectionRepository;
 
     /*******  Create Board  ******/
-    public void createBoard(Board board){
-        try{
-            boardRepository.save(board);
-        }
-        catch (Exception e) {
+    public Board createBoard(Board board) {
+        try {
+            String[] sectionNames = {"To Do", "In Progress", "Done"};
+            Map<Integer, String> sectionsMap = new HashMap<>();
+
+            for (int i = 1; i <= sectionNames.length; i++) {
+                sectionsMap.put(i, sectionNames[i - 1]);
+            }
+
+            board.setSections(sectionsMap);
+            return boardRepository.save(board);
+        } catch (Exception e) {
             System.out.println("Cannot create board " + e.getMessage());
+            return null;
         }
     }
 
@@ -29,7 +41,7 @@ public class BoardService {
         try {
             return boardRepository.findAll();
         } catch (Exception e) {
-            System.out.println("Cannot get all Boards " + e.getMessage());
+            System.out.println("Cannot get all Boards: " + e.getMessage());
             return null;
         }
     }

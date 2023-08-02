@@ -1,6 +1,7 @@
 package com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Services;
 
 import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Models.Card;
+import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Models.Section;
 import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Repositories.CardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,14 +14,18 @@ import java.util.Optional;
 @Service
 public class CardService {
     @Autowired
-    CardRepository cardRepository;
+    private CardRepository cardRepository;
+
+    @Autowired
+    private SectionService sectionService;
 
     /*******  Create Card  ******/
     public void createCard(Card card){
-        try{
+        try {
+            Section section = sectionService.getSectionById(card.getSection().getId());
+            card.setSection(section);
             cardRepository.save(card);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             System.out.println("Cannot create card " + e.getMessage());
         }
     }

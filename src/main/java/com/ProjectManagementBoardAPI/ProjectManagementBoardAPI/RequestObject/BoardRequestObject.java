@@ -1,7 +1,6 @@
 package com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.RequestObject;
 
 import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Models.Board;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -21,9 +20,6 @@ public class BoardRequestObject {
 
         board.setId(request.getId());
         board.setTitle(request.getTitle());
-        board.setIsActive(true);
-        board.setCreatedDate(nowDate);
-        board.setUpdatedDate(nowDate);
         return board;
     }
 

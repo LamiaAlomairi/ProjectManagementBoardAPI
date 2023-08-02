@@ -18,9 +18,6 @@ public class CardRequest {
 
         card.setTitle(request.getTitle());
         card.setDescription(request.getDescription());
-        card.setIsActive(true);
-        card.setCreatedDate(nowDate);
-        card.setUpdatedDate(nowDate);
         return card;
     }
 

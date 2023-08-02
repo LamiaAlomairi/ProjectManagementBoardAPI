@@ -1,6 +1,7 @@
 package com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.ResponseObject;
 
 import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Models.Card;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,6 +12,7 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
+@AllArgsConstructor
 public class CardResponse {
     Integer id;
     String title;

@@ -1,8 +1,12 @@
 package com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Controllers;
 
+import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Models.Board;
 import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Models.Card;
+import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Models.Section;
 import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.ResponseObject.CardResponse;
+import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Services.BoardService;
 import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Services.CardService;
+import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Services.SectionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,11 +17,23 @@ import java.util.List;
 public class CardController {
     @Autowired
     CardService cardService;
+    @Autowired
+    SectionService sectionService;
+    @Autowired
+    BoardService boardService;
 
     /*******  Create Card  ******/
     @PostMapping
     public void createCard(@RequestBody Card card) {
         try {
+            // Fetch the Section by its ID
+            Section section = sectionService.getSectionById(card.getSection().getId());
+            card.setSection(section);
+
+            // Fetch the Board by its ID
+            Board board = boardService.getBoardById(card.getBoard().getId());
+            card.setBoard(board);
+
             cardService.createCard(card);
         } catch (Exception e) {
             System.err.println("Cannot create card: " + e.getMessage());
