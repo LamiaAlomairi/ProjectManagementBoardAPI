@@ -14,4 +14,13 @@ public class Card extends BaseEntity {
     Integer id;
     String title;
     String description;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "section_id")
+    private Section section;
+
+    // Define the many-to-one relationship with the board
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "board_id")
+    private Board board;
 }
