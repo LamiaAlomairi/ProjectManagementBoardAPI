@@ -1,14 +1,12 @@
 package com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Services;
 
 import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Models.Board;
+import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Models.Section;
 import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Repositories.BoardRepository;
-import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Repositories.SectionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -16,19 +14,20 @@ public class BoardService {
     @Autowired
     BoardRepository boardRepository;
     @Autowired
-    SectionRepository sectionRepository;
+    SectionService sectionService;
 
     /*******  Create Board  ******/
     public Board createBoard(Board board) {
         try {
-            String[] sectionNames = {"To Do", "In Progress", "Done"};
-            Map<Integer, String> sectionsMap = new HashMap<>();
+            // Get all existing sections from the Section table
+            List<Section> existingSections = sectionService.getAllSections();
 
-            for (int i = 1; i <= sectionNames.length; i++) {
-                sectionsMap.put(i, sectionNames[i - 1]);
+            // Add the existing sections to the board and save them in the mapping table
+            for (Section existingSection : existingSections) {
+                board.getSections().add(existingSection);
             }
 
-            board.setSections(sectionsMap);
+            // Save the board to the database and return the saved board
             return boardRepository.save(board);
         } catch (Exception e) {
             System.out.println("Cannot create board " + e.getMessage());
@@ -41,29 +40,28 @@ public class BoardService {
         try {
             return boardRepository.findAll();
         } catch (Exception e) {
-            System.out.println("Cannot get all Boards: " + e.getMessage());
+            System.out.println("Cannot Get Boards " + e.getMessage());
             return null;
         }
     }
 
     /*******  Get Board by id  ******/
-    public Board getBoardById(String id) {
+    public Board getBoardById(Long id) {
         try {
-            return boardRepository.findById(id).get();
-        }
-        catch (Exception e) {
-            System.out.println("Cannot get all Board with this id " + e.getMessage());
+            return boardRepository.findById(id).orElse(null);
+        } catch (Exception e) {
+            System.out.println("Cannot get Board with this id " + e.getMessage());
             return null;
         }
     }
 
     /****** Update Board ******/
-    public Board updateBoard(String id, Board board) {
+    public Board updateBoard(Long id, Board board) {
         try {
             Optional<Board> optionalBoard = boardRepository.findById(id);
             if (optionalBoard.isPresent()) {
                 Board existingBoard = optionalBoard.get();
-                existingBoard.setTitle(board.getTitle());
+                existingBoard.setName(board.getName());
                 return boardRepository.save(existingBoard);
             }
         } catch (Exception e) {
@@ -73,7 +71,7 @@ public class BoardService {
     }
 
     /****** Delete Board ******/
-    public void deleteBoardById(String id) {
+    public void deleteBoardById(Long id) {
         try {
             boardRepository.deleteById(id);
         } catch (Exception e) {

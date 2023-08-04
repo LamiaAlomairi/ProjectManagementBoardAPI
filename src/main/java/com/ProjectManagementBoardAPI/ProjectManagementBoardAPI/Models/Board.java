@@ -4,9 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Getter
 @Setter
@@ -14,18 +13,15 @@ import java.util.Map;
 @Table(name = "board")
 public class Board {
     @Id
-    String id;
-    String title;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String name;
 
-    @ElementCollection
-    @CollectionTable(name = "board_sections", joinColumns = @JoinColumn(name = "board_id"))
-    @MapKeyColumn(name = "section_id")
-    @Column(name = "section_name")
-    private Map<Integer, String> sections = new HashMap<>();
-
-    @Transient
-    private List<Section> sectionsWithCards;
-
-//    @OneToMany(mappedBy = "board")
-//    private List<Card> cards;
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+            name = "board_section_mapping",
+            joinColumns = @JoinColumn(name = "board_id"),
+            inverseJoinColumns = @JoinColumn(name = "section_id")
+    )
+    private List<Section> sections = new ArrayList<>();
 }

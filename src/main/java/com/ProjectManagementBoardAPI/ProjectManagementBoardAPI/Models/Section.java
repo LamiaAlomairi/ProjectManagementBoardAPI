@@ -1,9 +1,11 @@
 package com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -12,9 +14,13 @@ import java.util.List;
 public class Section {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Integer id;
-    String name;
+    private Long id;
+    private String name;
+    @ManyToMany(mappedBy = "sections")
+    @JsonIgnore
+    private List<Board> boards = new ArrayList<>();
 
-//    @OneToMany(mappedBy = "section")
-//    private List<Card> cards;
+    @OneToMany(mappedBy = "section")
+    @JsonIgnore
+    private List<Card> cards = new ArrayList<>();
 }

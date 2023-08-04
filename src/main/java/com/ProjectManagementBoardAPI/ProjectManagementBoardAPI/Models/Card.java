@@ -1,5 +1,6 @@
 package com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,17 +12,16 @@ import lombok.Setter;
 public class Card {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Integer id;
-    String title;
-    String description;
+    private Long id;
+    private String name;
+    private String description;
 
-    // Define the many-to-one relationship with the board
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "board_id")
     private Board board;
 
-    // Define the many-to-one relationship with the section
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "section_id")
     private Section section;
 }

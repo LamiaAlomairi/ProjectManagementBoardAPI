@@ -15,11 +15,12 @@ public class BoardController {
 
     /*******  Create Board  ******/
     @PostMapping
-    public void createBoard(@RequestBody Board board) {
+    public Board createBoard(@RequestBody Board board) {
         try {
-            boardService.createBoard(board);
+            return boardService.createBoard(board);
         } catch (Exception e) {
-            System.err.println("Cannot create board: " + e.getMessage());
+            System.err.println("Cannot create Board " + e.getMessage());
+            return null;
         }
     }
 
@@ -29,7 +30,7 @@ public class BoardController {
         try {
             return boardService.getAllBoards();
         } catch (Exception e) {
-            System.err.println("Cannot get all Boards: " + e.getMessage());
+            System.err.println("Cannot get all Boards " + e.getMessage());
             return null;
         }
     }
@@ -37,7 +38,7 @@ public class BoardController {
 
     /*******  Get Board by id  ******/
     @GetMapping(value = "/{id}")
-    public Board getBoardById(@PathVariable String id) {
+    public Board getBoardById(@PathVariable Long id) {
         try {
             return boardService.getBoardById(id);
         } catch (Exception e) {
@@ -48,7 +49,7 @@ public class BoardController {
 
     /****** Update Board ******/
     @PutMapping("/{id}")
-    public Board updateBoard(@PathVariable String id, @RequestBody Board update) {
+    public Board updateBoard(@PathVariable Long id, @RequestBody Board update) {
         try {
             return boardService.updateBoard(id, update);
         } catch (Exception e) {
@@ -59,7 +60,7 @@ public class BoardController {
 
     /****** Delete Board ******/
     @DeleteMapping(value = "/{id}")
-    public void deleteBoardById(@PathVariable String id) {
+    public void deleteBoardById(@PathVariable Long id) {
         try {
             boardService.deleteBoardById(id);
         } catch (Exception e) {

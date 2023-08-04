@@ -1,7 +1,7 @@
 package com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Services;
 
 import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Models.Card;
-import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Models.Section;
+import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Repositories.BoardRepository;
 import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Repositories.CardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,15 +18,16 @@ public class CardService {
 
     @Autowired
     private SectionService sectionService;
+    @Autowired
+    BoardRepository boardRepository;
 
     /*******  Create Card  ******/
-    public void createCard(Card card){
+    public Card createCard(Card card) {
         try {
-            Section section = sectionService.getSectionById(card.getSection().getId());
-            card.setSection(section);
-            cardRepository.save(card);
+            return cardRepository.save(card);
         } catch (Exception e) {
-            System.out.println("Cannot create card " + e.getMessage());
+            System.out.println("Cannot create Card " + e.getMessage());
+            return null;
         }
     }
 
@@ -41,7 +42,7 @@ public class CardService {
     }
 
     /*******  Get Card by id  ******/
-    public Card getCardById(Integer id) {
+    public Card getCardById(Long id) {
         try {
             return cardRepository.findById(id).get();
         }
@@ -52,13 +53,14 @@ public class CardService {
     }
 
     /****** Update Card ******/
-    public Card updateCard(@PathVariable Integer id, @RequestBody Card card) {
+    public Card updateCard(@PathVariable Long id, @RequestBody Card card) {
         try {
             Optional<Card> optionalCard = cardRepository.findById(id);
             if (optionalCard.isPresent()) {
                 Card existingCard = optionalCard.get();
-                existingCard.setTitle(card.getTitle());
+                existingCard.setName(card.getName());
                 existingCard.setDescription(card.getDescription());
+                existingCard.setSection(card.getSection());
                 return cardRepository.save(existingCard);
             }
         } catch (Exception e) {
@@ -68,7 +70,7 @@ public class CardService {
     }
 
     /****** Delete Card ******/
-    public void deleteCardById(Integer id) {
+    public void deleteCardById(Long id) {
         try {
             cardRepository.deleteById(id);
         } catch (Exception e) {

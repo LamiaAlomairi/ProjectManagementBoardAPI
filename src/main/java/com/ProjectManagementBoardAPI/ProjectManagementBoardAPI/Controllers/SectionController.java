@@ -17,17 +17,18 @@ public class SectionController {
         try {
             return sectionService.createSection(section);
         } catch (Exception e) {
-            System.err.println("Cannot create card: " + e.getMessage());
+            System.err.println("Cannot create Section: " + e.getMessage());
         }
         return null;
     }
 
+    /*******  Get Section by id  ******/
     @GetMapping(value = "/{id}")
-    public void getSectionById(@PathVariable Integer id) {
+    public void getSectionById(@PathVariable Long id) {
         try {
             sectionService.getSectionById(id);
         } catch (Exception e) {
-            System.err.println("Cannot get Card with this id " + e.getMessage());
+            System.err.println("Cannot get Section with this id " + e.getMessage());
         }
     }
 }

@@ -1,12 +1,7 @@
 package com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Controllers;
 
-import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Models.Board;
 import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Models.Card;
-import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Models.Section;
-import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.ResponseObject.CardResponse;
-import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Services.BoardService;
 import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Services.CardService;
-import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Services.SectionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,36 +12,23 @@ import java.util.List;
 public class CardController {
     @Autowired
     CardService cardService;
-    @Autowired
-    SectionService sectionService;
-    @Autowired
-    BoardService boardService;
 
     /*******  Create Card  ******/
     @PostMapping
-    public void createCard(@RequestBody Card card) {
+    public Card createCard(@RequestBody Card card) {
         try {
-            // Fetch the Section by its ID
-            Section section = sectionService.getSectionById(card.getSection().getId());
-            card.setSection(section);
-
-            // Fetch the Board by its ID
-            Board board = boardService.getBoardById(card.getBoard().getId());
-            card.setBoard(board);
-
-            cardService.createCard(card);
+            return cardService.createCard(card);
         } catch (Exception e) {
-            System.err.println("Cannot create card: " + e.getMessage());
+            System.err.println("Cannot create Card " + e.getMessage());
+            return null;
         }
     }
 
     /*******  Get All Cards  ******/
     @GetMapping
-    public List<CardResponse> getAllCards() {
+    public List<Card> getAllCards() {
         try {
-            List<Card> cards = cardService.getAllCards();
-            List<CardResponse> listOfConvertedCards = CardResponse.convertToResponseList(cards);
-            return listOfConvertedCards;
+            return cardService.getAllCards();
         } catch (Exception e) {
             System.err.println("Cannot get all Cards " + e.getMessage());
             return null;
@@ -55,7 +37,7 @@ public class CardController {
 
     /*******  Get Card by id  ******/
     @GetMapping(value = "/{id}")
-    public Card getCardById(@PathVariable Integer id) {
+    public Card getCardById(@PathVariable Long id) {
         try {
             return cardService.getCardById(id);
         } catch (Exception e) {
@@ -66,7 +48,7 @@ public class CardController {
 
     /****** Update Card ******/
     @PutMapping("/{id}")
-    public Card updateCard(@PathVariable Integer id, @RequestBody Card card) {
+    public Card updateCard(@PathVariable Long id, @RequestBody Card card) {
         try {
             return cardService.updateCard(id, card);
         } catch (Exception e) {
@@ -77,7 +59,7 @@ public class CardController {
 
     /****** Delete Card ******/
     @DeleteMapping(value = "/{id}")
-    public void deleteCardById(@PathVariable Integer id) {
+    public void deleteCardById(@PathVariable Long id) {
         try {
             cardService.deleteCardById(id);
         } catch (Exception e) {
