@@ -7,7 +7,7 @@ services:
       - "9090:3306"
     environment:
       MYSQL_ROOT_PASSWORD: lamia
-      MYSQL_DATABSE: Player
+      MYSQL_DATABSE: BoardAPI
       MYSQL_TCP_PORT: 3306
     restart: on-failure
 
@@ -28,40 +28,3 @@ services:
     restart: on-failure
     depends_on:
       - api
-#-------------------------------------------------------------------------
-
-#version: "3"
-#services:
-#  db:
-#    image: mysql
-#    ports:
-#      - "9090:3306"
-#    environment:
-#      MYSQL_ROOT_PASSWORD: root
-#      MYSQL_TCP_PORT: 3306
-#      MYSQL_DATABASE: Player
-#    restart: unless-stopped
-#  api:
-#    build: .
-#    image: tttapi
-#    ports:
-#      - "8080:8080"
-#    volumes:
-#      - ./cont_logs:/app/logs
-#    environment:
-#      SPRING_APPLICATION_JSON: '{
-#        "spring.datasource.url": "jdbc:mysql://db:9000/thedynamicdoersdb?useSSL=false&serverTimezone=UTC&createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true",
-#        "spring.datasource.password": "root"
-#      }'
-#    restart: on-failure
-#    depends_on:
-#      - db
-#  ui:
-#    image: nginx
-#    ports:
-#      - "80:80"
-#    volumes:
-#      - ./src/main/resources/static:/usr/share/nginx/html
-#    depends_on:
-#      - api
-#    restart: unless-stopped
