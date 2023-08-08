@@ -13,15 +13,14 @@ public class Card {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
+    private String title;
     private String description;
 
-    @ManyToOne
-    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY) // Use LAZY loading for performance
     @JoinColumn(name = "board_id")
     private Board board;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY) // Use LAZY loading for performance
     @JoinColumn(name = "section_id")
     private Section section;
 }

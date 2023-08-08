@@ -1,6 +1,7 @@
 package com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Services;
 
 import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Models.Board;
+import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Models.Card;
 import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Models.Section;
 import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Repositories.BoardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,16 +20,17 @@ public class BoardService {
     /*******  Create Board  ******/
     public Board createBoard(Board board) {
         try {
-            // Get all existing sections from the Section table
-            List<Section> existingSections = sectionService.getAllSections();
+            Board createdBoard = boardRepository.save(board);
 
-            // Add the existing sections to the board and save them in the mapping table
-            for (Section existingSection : existingSections) {
-                board.getSections().add(existingSection);
+            // Create three sections with specific names for the new board
+            String[] sectionNames = {"To Do", "In Progress", "Done"};
+            for (String sectionName : sectionNames) {
+                Section section = new Section();
+                section.setName(sectionName);
+                section.setBoard(createdBoard);
+                sectionService.createSection(section);
             }
-
-            // Save the board to the database and return the saved board
-            return boardRepository.save(board);
+            return createdBoard;
         } catch (Exception e) {
             System.out.println("Cannot create board " + e.getMessage());
             return null;
@@ -61,7 +63,7 @@ public class BoardService {
             Optional<Board> optionalBoard = boardRepository.findById(id);
             if (optionalBoard.isPresent()) {
                 Board existingBoard = optionalBoard.get();
-                existingBoard.setName(board.getName());
+                existingBoard.setTitle(board.getTitle());
                 return boardRepository.save(existingBoard);
             }
         } catch (Exception e) {
@@ -77,5 +79,34 @@ public class BoardService {
         } catch (Exception e) {
             System.out.println("Cannot delete Board: " + e.getMessage());
         }
+    }
+
+    /****** Get sections in a selected Board ******/
+    public List<Section> getAllSectionsInBoard(Long boardId) {
+        Optional<Board> optionalBoard = boardRepository.findById(boardId);
+        if (optionalBoard.isPresent()) {
+            Board board = optionalBoard.get();
+            return board.getSections();
+        }
+        return null;
+    }
+
+    /****** Get in a selected sections in a selected Board ******/
+    public List<Card> getCardsInSectionOfBoard(Long boardId, Long sectionId) {
+        Optional<Board> optionalBoard = boardRepository.findById(boardId);
+        if (optionalBoard.isPresent()) {
+            Board board = optionalBoard.get();
+
+            // Check if the section belongs to the board
+            Section section = board.getSections().stream()
+                    .filter(s -> s.getId().equals(sectionId))
+                    .findFirst()
+                    .orElse(null);
+
+            if (section != null) {
+                return section.getCards();
+            }
+        }
+        return null;
     }
 }

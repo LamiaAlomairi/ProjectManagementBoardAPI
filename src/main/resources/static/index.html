@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Board Manegment</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+
+    <body>
+        <div class="header">
+            <div class="board-title-select">
+                <select class="board-select" id="boardSelect">
+                    <option disabled selected>Select board</option>
+                    <!-- Add your boards name dynamically using JavaScript -->
+                </select>
+            </div>
+
+            <div>
+                <input type="text" id="newBoardTitle" placeholder="Enter a new board title">
+                <button type="button" onclick="updateBoardTitle()">Update</button>
+            </div>
+        </div>
+
+        <div class="board-container">
+            <!-- Sections will be dynamically added here -->
+                    <!-- Add your cards dynamically inside section using JavaScript -->
+        </div>
+
+        <script src="script.js"></script>
+    </body>
+</html>

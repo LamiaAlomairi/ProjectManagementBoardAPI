@@ -1,7 +1,6 @@
 package com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Services;
 
 import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Models.Card;
-import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Repositories.BoardRepository;
 import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Repositories.CardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,11 +14,6 @@ import java.util.Optional;
 public class CardService {
     @Autowired
     private CardRepository cardRepository;
-
-    @Autowired
-    private SectionService sectionService;
-    @Autowired
-    BoardRepository boardRepository;
 
     /*******  Create Card  ******/
     public Card createCard(Card card) {
@@ -58,7 +52,7 @@ public class CardService {
             Optional<Card> optionalCard = cardRepository.findById(id);
             if (optionalCard.isPresent()) {
                 Card existingCard = optionalCard.get();
-                existingCard.setName(card.getName());
+                existingCard.setTitle(card.getTitle());
                 existingCard.setDescription(card.getDescription());
                 existingCard.setSection(card.getSection());
                 return cardRepository.save(existingCard);

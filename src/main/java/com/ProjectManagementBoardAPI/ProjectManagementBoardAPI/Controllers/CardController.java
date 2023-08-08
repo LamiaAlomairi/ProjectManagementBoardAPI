@@ -9,6 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "api/card")
+@CrossOrigin("*")
 public class CardController {
     @Autowired
     CardService cardService;

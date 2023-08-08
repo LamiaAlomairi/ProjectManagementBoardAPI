@@ -16,9 +16,10 @@ public class Section {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    @ManyToMany(mappedBy = "sections")
+    @ManyToOne
+    @JoinColumn(name = "board_id")
     @JsonIgnore
-    private List<Board> boards = new ArrayList<>();
+    private Board board;
 
     @OneToMany(mappedBy = "section")
     @JsonIgnore

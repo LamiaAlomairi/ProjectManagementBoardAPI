@@ -1,0 +1,75 @@
+body {
+  font-family: Arial, sans-serif;
+}
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #292001;
+  color: #fff;
+  padding: 12px;
+}
+.board-title {
+  font-size: 24px;
+}
+.board-title-select {
+  display: flex;
+  align-items: center;
+}
+.board-select {
+    background-color: transparent;
+    border: none;
+    margin-left: 50px;
+    margin-right: 50px;
+    font-size: 24px;
+    color: #ccc;
+}
+.board-container {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  padding: 20px;
+}
+.section {
+  background-color: #f2f2f2;
+  border-radius: 5px;
+  padding: 10px;
+  min-width: 300px;
+  flex-grow: 1;
+}
+.section-header {
+  font-weight: bold;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #ccc;
+  display: flex;
+  justify-content: space-between;
+}
+.section-title {
+  font-size: 18px;
+}
+.cards-container {
+  margin-top: 10px;
+}
+.card {
+  background-color: #fff;
+  border-radius: 5px;
+  padding: 8px;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+}
+.card-content {
+  flex-grow: 1;
+}
+.update-icon {
+  cursor: pointer;
+}
+.delete-icon {
+  cursor: pointer;
+}
+.create-card-btn {
+  margin-top: 10px;
+  cursor: pointer;
+  color: #0079bf;
+  font-weight: bold;
+}

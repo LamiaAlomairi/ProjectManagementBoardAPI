@@ -15,13 +15,8 @@ public class Board {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
+    private String title;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(
-            name = "board_section_mapping",
-            joinColumns = @JoinColumn(name = "board_id"),
-            inverseJoinColumns = @JoinColumn(name = "section_id")
-    )
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "board")
     private List<Section> sections = new ArrayList<>();
 }

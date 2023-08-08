@@ -5,8 +5,11 @@ import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Services.SectionS
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(value = "api/section")
+@CrossOrigin("*")
 public class SectionController {
     @Autowired
     SectionService sectionService;
@@ -20,6 +23,17 @@ public class SectionController {
             System.err.println("Cannot create Section: " + e.getMessage());
         }
         return null;
+    }
+
+    /*******  Get All Sections  ******/
+    @GetMapping
+    public List<Section> getAllSections() {
+        try {
+            return sectionService.getAllSections();
+        } catch (Exception e) {
+            System.err.println("Cannot get all Sections " + e.getMessage());
+            return null;
+        }
     }
 
     /*******  Get Section by id  ******/
