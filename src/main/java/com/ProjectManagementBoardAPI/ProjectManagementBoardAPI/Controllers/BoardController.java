@@ -39,7 +39,6 @@ public class BoardController {
         }
     }
 
-
     /*******  Get Board by id  ******/
     @GetMapping(value = "/{id}")
     public Board getBoardById(@PathVariable Long id) {

@@ -8,17 +8,26 @@
     <body>
         <div class="header">
             <div class="board-title-select">
+                <button type="button" class="create-board-button" onclick="openCreateBoardModal()">+</button>
                 <select class="board-select" id="boardSelect">
-                    <option disabled selected>Select board</option>
                     <!-- Add your boards name dynamically using JavaScript -->
                 </select>
             </div>
 
             <div>
-                <input type="text" id="newBoardTitle" placeholder="Enter a new board title">
-                <button type="button" onclick="updateBoardTitle()">Update</button>
+                <input type="text" id="newBoardTitle" placeholder="Enter a new board title" oninput="updateInputValue(this)">
+                <button type="button" id="updateBtn" onclick="updateBoardTitle()">Update</button>
             </div>
         </div>
+
+        <div id="createBoardModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeCreateBoardModal()">&times;</span>
+                <input type="text" id="newBoardTitleModal" placeholder="Enter a new board title">
+                <button type="button" id="createBtn" onclick="createNewBoard()">Create Board</button>
+            </div>
+        </div>
+        
 
         <div class="board-container">
             <!-- Sections will be dynamically added here -->

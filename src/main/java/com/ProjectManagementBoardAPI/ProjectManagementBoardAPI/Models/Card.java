@@ -1,6 +1,5 @@
 package com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,7 +19,8 @@ public class Card {
     @JoinColumn(name = "board_id")
     private Board board;
 
-    @ManyToOne(fetch = FetchType.LAZY) // Use LAZY loading for performance
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "section_id")
     private Section section;
+
 }

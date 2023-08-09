@@ -1,75 +1,216 @@
 body {
-  font-family: Arial, sans-serif;
+  font-family: 'sans-serif';
 }
+
+/****** Header of page ***************************************************************************/
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #292001;
-  color: #fff;
+  background-color: #f2f2f2;
   padding: 12px;
 }
-.board-title {
-  font-size: 24px;
+  .board-title-select {
+    display: flex;
+    align-items: center;
+  }
+  /*Dropdown style ***********************************/
+    .board-select {
+        background-color: transparent;
+        border: none;
+        margin-left: 50px;
+        margin-right: 50px;
+        font-size: 24px;
+        font-family: 'sans-serif';
+    }
+  /* Style for the button **************************/
+    .create-board-button {
+      border: none;
+      background-color: transparent;
+      font-size: 24px;
+      cursor: pointer;
+    }
+    #newBoardTitle{
+      background-color: transparent;
+      font-size: 20px;
+      font-family: 'sans-serif';
+    }
+    #updateBtn{
+      font-size: 20px;
+      font-family: 'sans-serif';
+      border-top-right-radius: 10px;
+      border-bottom-right-radius: 10px;
+    }
+    #updateBtn:hover{
+      color: white;
+      background-color: black;
+    }
+
+
+
+/* Style for the modal create board  *********************************************************************/
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
 }
-.board-title-select {
-  display: flex;
-  align-items: center;
-}
-.board-select {
-    background-color: transparent;
-    border: none;
-    margin-left: 50px;
-    margin-right: 50px;
-    font-size: 24px;
-    color: #ccc;
-}
+  /* Style for the modal content */
+  .modal-content {
+    background-color: #f2f2f2;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 50%;
+    text-align: center;
+    border-radius: 10px;
+  }
+    #newBoardTitleModal{
+      background-color: transparent;
+      font-size: 20px;
+      font-family: 'sans-serif';
+    }
+    #createBtn{
+      font-size: 20px;
+      font-family: 'sans-serif';
+      border-top-right-radius: 10px;
+      border-bottom-right-radius: 10px;
+    }
+    #createBtn:hover{
+      color: white;
+      background-color: black;
+    }
+    /* Style for the close button */
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+    }
+    .close:hover,
+    .close:focus {
+      color: black;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+
+
+/* Style has Sections    *******************************************************************************/    
 .board-container {
   display: flex;
   gap: 20px;
   overflow-x: auto;
   padding: 20px;
 }
-.section {
-  background-color: #f2f2f2;
-  border-radius: 5px;
-  padding: 10px;
-  min-width: 300px;
-  flex-grow: 1;
+/* Sections style   *********************************************************/
+  .section {
+    background-color: #f2f2f2;
+    border-radius: 5px;
+    padding: 10px;
+    min-width: 300px;
+    flex-grow: 1;
+  }
+    .section-header {
+      font-weight: bold;
+      padding-bottom: 5px;
+      border-bottom: 1px solid #ccc;
+      display: flex;
+      justify-content: space-between;
+    }
+    .section-title {
+      font-size: 18px;
+    }
+
+/*Dive where cards show **************/
+  .cards-container {
+    margin-top: 10px;
+  }
+    .card {
+      background-color: #fff;
+      border-radius: 5px;
+      padding: 8px;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .card-content {
+      flex-grow: 1;
+      font-size: 20px;
+    }
+      .card-id{
+        padding-bottom: 5px;
+        border-bottom: 1px solid #ccc;
+      }
+      .card-title{
+        padding-bottom: 5px;
+        padding-top: 5px;
+      }
+      .update-icon {
+        cursor: pointer;
+      }
+      .update-icon:hover {
+        color: #aaa;
+        font-weight: bold;
+      }
+      .delete-icon {
+        cursor: pointer;
+      }
+      .delete-icon:hover {
+        color: #aaa;
+        font-weight: bold;
+      }
+      .create-card-btn {
+        margin-top: 10px;
+        cursor: pointer;
+        color: #0079bf;
+        font-weight: bold;
+      }
+      .create-card-btn:hover {
+        margin-top: 10px;
+        cursor: pointer;
+        color: #aaa;
+        font-weight: bold;
+      }
+
+#cardTitleInput{
+  background-color: transparent;
+      font-size: 20px;
+      font-family: 'sans-serif';
 }
-.section-header {
-  font-weight: bold;
-  padding-bottom: 5px;
-  border-bottom: 1px solid #ccc;
-  display: flex;
-  justify-content: space-between;
+#cardDescriptionInput, #updateCardTitleInput, #updateCardDescriptionInput, #updateSectionSelect{
+  background-color: transparent;
+      font-size: 20px;
+      font-family: 'sans-serif';
 }
-.section-title {
-  font-size: 18px;
+
+#saveBtn{
+  background-color: transparent;
+  font-size: 20px;
+  font-family: 'sans-serif';
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
 }
-.cards-container {
-  margin-top: 10px;
+#saveBtn:hover{
+  background-color: black;
+  color:white;
 }
-.card {
-  background-color: #fff;
-  border-radius: 5px;
-  padding: 8px;
-  margin-bottom: 8px;
-  display: flex;
-  justify-content: space-between;
+#cancleBtn{
+  background-color: transparent;
+  font-size: 20px;
+  font-family: 'sans-serif';
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
 }
-.card-content {
-  flex-grow: 1;
+#cancleBtn:hover{
+  background-color: black;
+  color:white;
 }
-.update-icon {
-  cursor: pointer;
-}
-.delete-icon {
-  cursor: pointer;
-}
-.create-card-btn {
-  margin-top: 10px;
-  cursor: pointer;
-  color: #0079bf;
-  font-weight: bold;
+
+.card-add{
+  text-align: center;
 }
