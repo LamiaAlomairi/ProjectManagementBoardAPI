@@ -6,7 +6,7 @@ services:
     ports:
       - "9090:3306"
     environment:
-      MYSQL_ROOT_PASSWORD: lamia
+      MYSQL_ROOT_PASSWORD: boardapi
       MYSQL_DATABSE: BoardAPI
       MYSQL_TCP_PORT: 3306
     restart: on-failure

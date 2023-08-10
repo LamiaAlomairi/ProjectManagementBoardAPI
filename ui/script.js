@@ -231,7 +231,7 @@ function renderCardsInSection(cardsData, cardsContainer) {
 
     const deleteIcon = document.createElement('span');
     deleteIcon.className = 'delete-icon';
-    deleteIcon.innerHTML = '&times'; // Cross icon
+    deleteIcon.innerHTML = 'X'; // Cross icon
     deleteIcon.onclick = () => deleteCard(card.id, cardContainer);
 
     actionsContainer.appendChild(updateIcon);
@@ -266,7 +266,7 @@ function createCard(sectionId) {
   
     const cardDescriptionInput = document.createElement('input');
     cardDescriptionInput.id = 'cardDescriptionInput';
-    cardDescriptionInput.type = 'textarea';
+    cardDescriptionInput.type = 'text';
     cardDescriptionInput.placeholder = 'Enter a description';
   
     const saveButton = document.createElement('button');
@@ -328,84 +328,49 @@ function saveCard(sectionId) {
 
 //Update card details *********************************************************************************************
 function renderCardDetails(card, cardContainer) {
-  const originalCardContent = document.createElement('div');
-  originalCardContent.className = 'original-card-content';
+  const cardContent = document.createElement('div');
+  cardContent.className = 'card-content';
 
   const cardIdElement = document.createElement('div');
   cardIdElement.className = 'card-id';
-
-  const idBold = document.createElement('span');
-  idBold.textContent = 'Card ID: ';
-  idBold.style.fontWeight = 'bold';
-
-  const idText = document.createElement('span');
-  idText.textContent = card.id;
-
-  cardIdElement.appendChild(idBold);
-  cardIdElement.appendChild(idText);
+  cardIdElement.textContent = `Card ID: ${card.id}`;
 
   const cardTitleElement = document.createElement('div');
   cardTitleElement.className = 'card-title';
-
-  const titleBold = document.createElement('span');
-  titleBold.textContent = 'Card Title: ';
-  titleBold.style.fontWeight = 'bold';
-
-  const titleText = document.createElement('span');
-  titleText.textContent = card.title;
-
-  cardTitleElement.appendChild(titleBold);
-  cardTitleElement.appendChild(titleText);
+  cardTitleElement.textContent = `Card Title: ${card.title}`;
 
   const cardDescriptionElement = document.createElement('div');
   cardDescriptionElement.className = 'card-description';
+  cardDescriptionElement.textContent = `Card Description: ${card.description}`;
 
-  const descriptionBold = document.createElement('span');
-  descriptionBold.textContent = 'Card Description: ';
-  descriptionBold.style.fontWeight = 'bold';
+  const updateButton = document.createElement('button');
+  updateButton.textContent = 'Update';
+  updateButton.addEventListener('click', () => showUpdateForm(card, cardContainer));
 
-  const descriptionText = document.createElement('span');
-  descriptionText.textContent = card.description;
-
-  cardDescriptionElement.appendChild(descriptionBold);
-  cardDescriptionElement.appendChild(descriptionText);
-
-  const actionsContainer = document.createElement('div');
-  actionsContainer.className = 'actions';
-  actionsContainer.style.position = 'absolute'; // Position the actions container absolutely
-
-  const cardContent = document.createElement('div');
-  cardContent.className = 'card-content';
-  cardContent.style.position = 'relative'; // Position the card content relatively
   cardContent.appendChild(cardIdElement);
   cardContent.appendChild(cardTitleElement);
   cardContent.appendChild(cardDescriptionElement);
-  cardContent.appendChild(actionsContainer);
+  cardContent.appendChild(updateButton);
 
-  originalCardContent.appendChild(cardContent);
-
-  cardContainer.innerHTML = ''; // Clear existing content
-  cardContainer.appendChild(originalCardContent);
+  cardContainer.appendChild(cardContent);
 }
-
 
 function showUpdateForm(card, cardContainer) {
   const cardContent = cardContainer.querySelector('.card-content');
+  cardContent.innerHTML = ''; // Clear existing content
 
   const cardTitleInput = document.createElement('input');
   cardTitleInput.id = 'updateCardTitleInput';
   cardTitleInput.type = 'text';
   cardTitleInput.value = card.title;
 
-  const cardDescriptionInput = document.createElement('textarea'); // Change input type to textarea
+  const cardDescriptionInput = document.createElement('input');
   cardDescriptionInput.id = 'updateCardDescriptionInput';
+  cardDescriptionInput.type = 'text';
   cardDescriptionInput.value = card.description;
 
   const sectionSelect = document.createElement('select');
   sectionSelect.id = 'updateSectionSelect';
-
-  const sectionLabel = document.createElement('label');
-  sectionLabel.textContent = 'Section: ';
 
   // Fetch and populate the sections for the dropdown
   fetch(`http://localhost:8080/api/board/${selectedBoardId}/section`)
@@ -432,27 +397,20 @@ function showUpdateForm(card, cardContainer) {
 
   const cancelButton = document.createElement('button');
   cancelButton.textContent = 'Cancel';
-  cancelButton.id = 'cancleBtn'; 
+  cancelButton.id = 'cancleBtn';
   cancelButton.addEventListener('click', () => {
-    // Restore the card details without re-rendering the board
-    cardContent.innerHTML = ''; // Clear existing content
-    renderCardDetails(card, cardContent);
+    cardContainer.innerHTML = ''; // Remove the update form
+    renderCardDetails(card, cardContainer);
   });
 
-  cardContent.appendChild(document.createTextNode('Title: '));
   cardContent.appendChild(cardTitleInput);
-  cardContent.appendChild(document.createElement('br'));
-  cardContent.appendChild(document.createTextNode('Description: '));
+  cardContent.appendChild(document.createElement('br')); // New line
   cardContent.appendChild(cardDescriptionInput);
-  cardContent.appendChild(document.createElement('br'));
-  cardContent.appendChild(sectionLabel);
+  cardContent.appendChild(document.createElement('br')); // New line
   cardContent.appendChild(sectionSelect);
-  cardContent.appendChild(document.createElement('br'));
   cardContent.appendChild(saveButton);
   cardContent.appendChild(cancelButton);
 }
-
-
 
 function saveUpdatedCard(cardId) {
   const updatedTitleInput = document.getElementById('updateCardTitleInput');

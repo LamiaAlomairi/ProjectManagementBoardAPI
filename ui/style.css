@@ -1,6 +1,5 @@
 body {
   font-family: 'sans-serif';
-  background-color: #f2f2f2;
 }
 
 /****** Header of page ***************************************************************************/
@@ -8,10 +7,8 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #d3d1d1ad;
+  background-color: #f2f2f2;
   padding: 12px;
-  border-top-left-radius: 15px;
-  border-top-right-radius: 15px;
 }
   .board-title-select {
     display: flex;
@@ -33,64 +30,23 @@ body {
       font-size: 24px;
       cursor: pointer;
     }
-
-    #newBoardTitleModal {
+    #newBoardTitle{
+      background-color: transparent;
       font-size: 20px;
       font-family: 'sans-serif';
-      padding: 8px; /* add internal spacing */
-      border: none;
-      background-color: #ebeaea;
-      width: auto;
-      box-shadow: 0px 5px 0px rgba(0, 0, 0, 0.1); /* shadow effect */
-      transition: box-shadow 0.3s ease; /* Transition effect on mouseover */
-      border-radius: 12px;
     }
-
-    #newBoardTitleModal:focus {
-      outline: none; /* remove the default point on focus */
-      box-shadow: 0px 5px 0px rgba(0, 0, 0, 0.1); /* Increase effect when focusing */
-    }
-
-    #newBoardTitle {
+    #updateBtn{
       font-size: 20px;
       font-family: 'sans-serif';
-      padding: 8px; /* add internal spacing */
-      border: none;
-      background-color: #f2f2f2;
-      width: auto;
-      box-shadow: 0px 5px 0px rgba(0, 0, 0, 0.1); /* shadow effect */
-      transition: box-shadow 0.3s ease; /* Transition effect on mouseover */
+      border-top-right-radius: 10px;
+      border-bottom-right-radius: 10px;
     }
-    
-    #newBoardTitle:focus {
-      outline: none; /* remove the default point on focus */
-      box-shadow: 0px 5px 0px rgba(0, 0, 0, 0.1); /* Increase effect when focusing */
+    #updateBtn:hover{
+      color: white;
+      background-color: black;
     }
-    
-    #newBoardTitle,
-    #updateBtn {
-      display: inline-block;
-      vertical-align: middle;
-      margin: -2px; /* remove any margins */
-    }
-    
-    #updateBtn {
-      font-size: 20px;
-      font-family: 'sans-serif';
-      padding: 8px 16px; /* Inner spacing for buttons */
-      border: none;
-      background-color: #f2f2f2;
-      box-shadow: 0px 5px 0px rgba(0, 0, 0, 0.1);
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-      border-top-right-radius: 15px;
-      border-bottom-right-radius: 15px;
-    }
-    
-    #updateBtn:hover {
-      background-color: #d3d1d193;
-    }
-    
+
+
 
 /* Style for the modal create board  *********************************************************************/
 .modal {
@@ -113,7 +69,21 @@ body {
     text-align: center;
     border-radius: 10px;
   }
-    
+    #newBoardTitleModal{
+      background-color: transparent;
+      font-size: 20px;
+      font-family: 'sans-serif';
+    }
+    #createBtn{
+      font-size: 20px;
+      font-family: 'sans-serif';
+      border-top-right-radius: 10px;
+      border-bottom-right-radius: 10px;
+    }
+    #createBtn:hover{
+      color: white;
+      background-color: black;
+    }
     /* Style for the close button */
     .close {
       color: #aaa;
@@ -136,9 +106,6 @@ body {
   gap: 20px;
   overflow-x: auto;
   padding: 20px;
-  background-color: #d3d1d1ad;
-  border-bottom-left-radius: 15px;
-  border-bottom-right-radius: 15px;
 }
 /* Sections style   *********************************************************/
   .section {
@@ -192,7 +159,6 @@ body {
       }
       .delete-icon {
         cursor: pointer;
-        font-size: 25px;
       }
       .delete-icon:hover {
         color: #aaa;
@@ -211,35 +177,40 @@ body {
         font-weight: bold;
       }
 
-      
-      #saveBtn, #cancleBtn, #createBtn {
-        font-size: 20px;
-        font-family: 'sans-serif';
-        padding: 8px; /* Inner spacing for buttons */
-        border: none;
-        background-color: #ebeaea;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-        border-bottom-left-radius: 15px;
-        border-bottom-right-radius: 15px;
-        padding-top:10px;
-        width: auto;
-      }
-      
-      #saveBtn:hover, #cancleBtn:hover, #createBtn:hover {
-        background-color: #d3d1d1d4;
-      }
+#cardTitleInput{
+  background-color: transparent;
+      font-size: 20px;
+      font-family: 'sans-serif';
+}
+#cardDescriptionInput, #updateCardTitleInput, #updateCardDescriptionInput, #updateSectionSelect{
+  background-color: transparent;
+      font-size: 20px;
+      font-family: 'sans-serif';
+}
+
+#saveBtn{
+  background-color: transparent;
+  font-size: 20px;
+  font-family: 'sans-serif';
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+#saveBtn:hover{
+  background-color: black;
+  color:white;
+}
+#cancleBtn{
+  background-color: transparent;
+  font-size: 20px;
+  font-family: 'sans-serif';
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+#cancleBtn:hover{
+  background-color: black;
+  color:white;
+}
 
 .card-add{
   text-align: center;
 }
-
-
-    #cardTitleInput,
-    #cardDescriptionInput,
-    #updateCardTitleInput,
-    #updateCardDescriptionInput,
-    #updateSectionSelect{
-      font-size: 20px;
-        font-family: 'sans-serif';
-    }
