@@ -1,23 +1,25 @@
 body {
   font-family: 'sans-serif';
-  background-color: #f2f2f2;
+  background-color: #a4abbc;
 }
 
-/****** Header of page ***************************************************************************/
+/*______________________________________________________________________________________________________________*/
+/*Header of page*/
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #d3d1d1ad;
+  background-color: #8b98b0;
   padding: 12px;
-  border-top-left-radius: 15px;
-  border-top-right-radius: 15px;
+  border-radius: 10px;
 }
+
+/*Title*/
   .board-title-select {
     display: flex;
     align-items: center;
   }
-  /*Dropdown style ***********************************/
+  /*Dropdown style*/
     .board-select {
         background-color: transparent;
         border: none;
@@ -26,7 +28,7 @@ body {
         font-size: 24px;
         font-family: 'sans-serif';
     }
-  /* Style for the button **************************/
+  /* Style for Create board button*/
     .create-board-button {
       border: none;
       background-color: transparent;
@@ -34,65 +36,46 @@ body {
       cursor: pointer;
     }
 
-    #newBoardTitleModal {
-      font-size: 20px;
-      font-family: 'sans-serif';
-      padding: 8px; /* add internal spacing */
-      border: none;
-      background-color: #ebeaea;
-      width: auto;
-      box-shadow: 0px 5px 0px rgba(0, 0, 0, 0.1); /* shadow effect */
-      transition: box-shadow 0.3s ease; /* Transition effect on mouseover */
-      border-radius: 12px;
-    }
-
-    #newBoardTitleModal:focus {
-      outline: none; /* remove the default point on focus */
-      box-shadow: 0px 5px 0px rgba(0, 0, 0, 0.1); /* Increase effect when focusing */
-    }
-
-    #newBoardTitle {
-      font-size: 20px;
-      font-family: 'sans-serif';
-      padding: 8px; /* add internal spacing */
-      border: none;
-      background-color: #f2f2f2;
-      width: auto;
-      box-shadow: 0px 5px 0px rgba(0, 0, 0, 0.1); /* shadow effect */
-      transition: box-shadow 0.3s ease; /* Transition effect on mouseover */
-    }
-    
-    #newBoardTitle:focus {
-      outline: none; /* remove the default point on focus */
-      box-shadow: 0px 5px 0px rgba(0, 0, 0, 0.1); /* Increase effect when focusing */
-    }
-    
-    #newBoardTitle,
-    #updateBtn {
-      display: inline-block;
-      vertical-align: middle;
-      margin: -2px; /* remove any margins */
-    }
-    
-    #updateBtn {
-      font-size: 20px;
-      font-family: 'sans-serif';
-      padding: 8px 16px; /* Inner spacing for buttons */
-      border: none;
-      background-color: #f2f2f2;
-      box-shadow: 0px 5px 0px rgba(0, 0, 0, 0.1);
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-      border-top-right-radius: 15px;
-      border-bottom-right-radius: 15px;
-    }
-    
-    #updateBtn:hover {
-      background-color: #d3d1d193;
-    }
-    
-
-/* Style for the modal create board  *********************************************************************/
+  /*Update board title*/
+  /*Textbox style*/
+  #newBoardTitle {
+    font-size: 20px;
+    font-family: 'sans-serif';
+    padding: 8px; /* add internal spacing */
+    border: none;
+    background-color: #f2f2f2;
+    width: auto;
+    box-shadow: 0px 5px 0px rgba(0, 0, 0, 0.1); /* shadow effect */
+    transition: box-shadow 0.3s ease; /* Transition effect on mouseover */
+  }
+  #newBoardTitle:focus {
+    outline: none; /* remove the default point on focus */
+    box-shadow: 0px 5px 0px rgba(0, 0, 0, 0.1); /* Increase effect when focusing */
+  }
+  #newBoardTitle,
+  #updateBtn {
+    display: inline-block;
+    vertical-align: middle;
+    margin: -2px; /* remove any margins */
+  }
+  /*Button update title style*/
+  #updateBtn {
+    font-size: 20px;
+    font-family: 'sans-serif';
+    padding: 8px 16px; /* Inner spacing for buttons */
+    border: none;
+    background-color: #f2f2f2;
+    box-shadow: 0px 5px 0px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+  }
+  #updateBtn:hover {
+    background-color: #d3d1d193;
+  }
+/*______________________________________________________________________________________________________________*/
+/*Create board modal style*/
 .modal {
   display: none;
   position: fixed;
@@ -113,45 +96,63 @@ body {
     text-align: center;
     border-radius: 10px;
   }
+
+  /*Textbox style*/
+  #newBoardTitleModal {
+    font-size: 20px;
+    font-family: 'sans-serif';
+    padding: 8px; /* add internal spacing */
+    border: none;
+    background-color: #ebeaea;
+    width: auto;
+    box-shadow: 0px 5px 0px rgba(0, 0, 0, 0.1); /* shadow effect */
+    transition: box-shadow 0.3s ease; /* Transition effect on mouseover */
+    border-radius: 12px;
+  }
+  #newBoardTitleModal:focus {
+    outline: none; /* remove the default point on focus */
+    box-shadow: 0px 5px 0px rgba(0, 0, 0, 0.1); /* Increase effect when focusing */
+  }
     
-    /* Style for the close button */
-    .close {
-      color: #aaa;
-      float: right;
-      font-size: 28px;
-      font-weight: bold;
-    }
-    .close:hover,
-    .close:focus {
-      color: black;
-      text-decoration: none;
-      cursor: pointer;
-    }
+  /* Style for the close button */
+  .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  .close:hover,
+  .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
 
-
-
-/* Style has Sections    *******************************************************************************/    
+/*______________________________________________________________________________________________________________*/
+/*Style has Sections*/    
 .board-container {
   display: flex;
   gap: 20px;
   overflow-x: auto;
   padding: 20px;
-  background-color: #d3d1d1ad;
+  /* background-color: #d3d1d1ad; */
   border-bottom-left-radius: 15px;
   border-bottom-right-radius: 15px;
 }
 /* Sections style   *********************************************************/
   .section {
-    background-color: #f2f2f2;
+    background-color: #8b98b0;
     border-radius: 5px;
     padding: 10px;
     min-width: 300px;
-    flex-grow: 1;
+    flex: 1;
+    height: 70%;
   }
+
     .section-header {
       font-weight: bold;
       padding-bottom: 5px;
-      border-bottom: 1px solid #ccc;
+      border-bottom: 1px solid #a4abbc;
       display: flex;
       justify-content: space-between;
     }
@@ -164,7 +165,8 @@ body {
     margin-top: 10px;
   }
     .card {
-      background-color: #fff;
+      /* background-color: #fff; */
+      background-color: #aeb5c7;
       border-radius: 5px;
       padding: 8px;
       margin-bottom: 8px;
@@ -177,7 +179,7 @@ body {
     }
       .card-id{
         padding-bottom: 5px;
-        border-bottom: 1px solid #ccc;
+        border-bottom: 1px solid #8b98b0;
       }
       .card-title{
         padding-bottom: 5px;
@@ -187,7 +189,7 @@ body {
         cursor: pointer;
       }
       .update-icon:hover {
-        color: #aaa;
+        color: #959bab;
         font-weight: bold;
       }
       .delete-icon {
@@ -195,19 +197,18 @@ body {
         font-size: 25px;
       }
       .delete-icon:hover {
-        color: #aaa;
+        color: #959bab;
         font-weight: bold;
       }
       .create-card-btn {
         margin-top: 10px;
         cursor: pointer;
-        color: #0079bf;
         font-weight: bold;
       }
       .create-card-btn:hover {
         margin-top: 10px;
         cursor: pointer;
-        color: #aaa;
+        color: #aeb5c7;
         font-weight: bold;
       }
 

@@ -1,4 +1,4 @@
-// When the page loads, fetch all the boards from the server and display them **************************************
+// When the page loads, fetch all the boards from the server and display them
 window.onload = function() {
   const selectOption = document.createElement('option');
   selectOption.textContent = 'Select board';
@@ -20,8 +20,8 @@ window.onload = function() {
 
   fetchBoards();
 };
-
-//Get all boards **************************************************************************************************
+//______________________________________________________________________________________________________________
+//Get all boards
 function fetchBoards() {
   return fetch('http://localhost:8080/api/board')
     .then(response => response.json())
@@ -56,6 +56,7 @@ function displayBoards(boards) {
   });
 }
 
+//Create defult board if database not has a board
 async function createDefaultBoard() {
   const newBoard = {
     title: 'Sprint Board 2023'
@@ -76,9 +77,8 @@ async function createDefaultBoard() {
     console.error('Error creating default board:', error);
   }
 }
-
-
-//Update title of board *******************************************************************************************
+//______________________________________________________________________________________________________________
+//Update title of board
 function updateBoardTitle() {
   const newBoardTitleInput = document.getElementById('newBoardTitle');
   const newTitle = newBoardTitleInput.value;
@@ -108,9 +108,8 @@ function updateBoardTitle() {
       console.error('Error updating board title:', error);
     });
 }
-
-
-//Get all sections ************************************************************************************************
+//______________________________________________________________________________________________________________
+//Get all sections
 function fetchSectionsAndCardsForBoard(boardId) {
   fetch(`http://localhost:8080/api/board/${boardId}/section`)
     .then(response => response.json())
@@ -154,7 +153,7 @@ function renderSectionsAndCards(sections) {
 
     boardContainer.appendChild(sectionContainer);
 
-    // Fetch and render cards for the current section and board ***************************************************
+    // Fetch and render cards for the current section and board 
     fetch(`http://localhost:8080/api/board/${selectedBoardId}/sections/${section.id}/cards`)
       .then(response => response.json())
       .then(cardsData => renderCardsInSection(cardsData, cardsContainer))
@@ -180,11 +179,12 @@ function renderCardsInSection(cardsData, cardsContainer) {
     cardIdElement.className = 'card-id';
 
     const idBold = document.createElement('span');
-    idBold.textContent = 'Card ID: ';
+    idBold.textContent = '#';
     idBold.style.fontWeight = 'bold';
 
     const idText = document.createElement('span');
     idText.textContent = card.id;
+    idText.style.fontWeight = 'bold';
 
     cardIdElement.appendChild(idBold);
     cardIdElement.appendChild(idText);
@@ -193,14 +193,10 @@ function renderCardsInSection(cardsData, cardsContainer) {
     const cardTitleElement = document.createElement('div');
     cardTitleElement.className = 'card-title';
 
-    const titleBold = document.createElement('span');
-    titleBold.textContent = 'Card Title: ';
-    titleBold.style.fontWeight = 'bold';
-
     const titleText = document.createElement('span');
     titleText.textContent = card.title;
+    titleText.style.fontWeight = 'bold';
 
-    cardTitleElement.appendChild(titleBold);
     cardTitleElement.appendChild(titleText);
 
     //For card description ***********************************
@@ -208,13 +204,13 @@ function renderCardsInSection(cardsData, cardsContainer) {
     cardDescriptionElement.className = 'card-description';
 
     const descriptionBold = document.createElement('span');
-    descriptionBold.textContent = 'Card Description: ';
-    descriptionBold.style.fontWeight = 'bold';
+    descriptionBold.textContent = 'Description: ';
 
     const descriptionText = document.createElement('span');
     descriptionText.textContent = card.description;
 
     cardDescriptionElement.appendChild(descriptionBold);
+    cardDescriptionElement.appendChild(document.createElement('br'));
     cardDescriptionElement.appendChild(descriptionText);
 
     cardContent.appendChild(cardIdElement);
@@ -266,7 +262,7 @@ function createCard(sectionId) {
   
     const cardDescriptionInput = document.createElement('input');
     cardDescriptionInput.id = 'cardDescriptionInput';
-    cardDescriptionInput.type = 'textarea';
+    cardDescriptionInput.type = 'text';
     cardDescriptionInput.placeholder = 'Enter a description';
   
     const saveButton = document.createElement('button');
@@ -291,8 +287,6 @@ function createCard(sectionId) {
     cardContainer.appendChild(cardContent);
     section.appendChild(cardContainer);
   }
-  
-  
 }
 
 //Save card in database
@@ -325,87 +319,29 @@ function saveCard(sectionId) {
     });
 }
 
-
-//Update card details *********************************************************************************************
-function renderCardDetails(card, cardContainer) {
-  const originalCardContent = document.createElement('div');
-  originalCardContent.className = 'original-card-content';
-
-  const cardIdElement = document.createElement('div');
-  cardIdElement.className = 'card-id';
-
-  const idBold = document.createElement('span');
-  idBold.textContent = 'Card ID: ';
-  idBold.style.fontWeight = 'bold';
-
-  const idText = document.createElement('span');
-  idText.textContent = card.id;
-
-  cardIdElement.appendChild(idBold);
-  cardIdElement.appendChild(idText);
-
-  const cardTitleElement = document.createElement('div');
-  cardTitleElement.className = 'card-title';
-
-  const titleBold = document.createElement('span');
-  titleBold.textContent = 'Card Title: ';
-  titleBold.style.fontWeight = 'bold';
-
-  const titleText = document.createElement('span');
-  titleText.textContent = card.title;
-
-  cardTitleElement.appendChild(titleBold);
-  cardTitleElement.appendChild(titleText);
-
-  const cardDescriptionElement = document.createElement('div');
-  cardDescriptionElement.className = 'card-description';
-
-  const descriptionBold = document.createElement('span');
-  descriptionBold.textContent = 'Card Description: ';
-  descriptionBold.style.fontWeight = 'bold';
-
-  const descriptionText = document.createElement('span');
-  descriptionText.textContent = card.description;
-
-  cardDescriptionElement.appendChild(descriptionBold);
-  cardDescriptionElement.appendChild(descriptionText);
-
-  const actionsContainer = document.createElement('div');
-  actionsContainer.className = 'actions';
-  actionsContainer.style.position = 'absolute'; // Position the actions container absolutely
-
-  const cardContent = document.createElement('div');
-  cardContent.className = 'card-content';
-  cardContent.style.position = 'relative'; // Position the card content relatively
-  cardContent.appendChild(cardIdElement);
-  cardContent.appendChild(cardTitleElement);
-  cardContent.appendChild(cardDescriptionElement);
-  cardContent.appendChild(actionsContainer);
-
-  originalCardContent.appendChild(cardContent);
-
-  cardContainer.innerHTML = ''; // Clear existing content
-  cardContainer.appendChild(originalCardContent);
-}
-
-
+//______________________________________________________________________________________________________________
+//Update card details 
 function showUpdateForm(card, cardContainer) {
   const cardContent = cardContainer.querySelector('.card-content');
+
+  // Save the original card content
+  const originalCardContent = cardContent.innerHTML;
+
+  // Clear existing content
+  cardContent.innerHTML = '';
 
   const cardTitleInput = document.createElement('input');
   cardTitleInput.id = 'updateCardTitleInput';
   cardTitleInput.type = 'text';
   cardTitleInput.value = card.title;
 
-  const cardDescriptionInput = document.createElement('textarea'); // Change input type to textarea
+  const cardDescriptionInput = document.createElement('input');
   cardDescriptionInput.id = 'updateCardDescriptionInput';
+  cardDescriptionInput.type = 'text';
   cardDescriptionInput.value = card.description;
 
   const sectionSelect = document.createElement('select');
   sectionSelect.id = 'updateSectionSelect';
-
-  const sectionLabel = document.createElement('label');
-  sectionLabel.textContent = 'Section: ';
 
   // Fetch and populate the sections for the dropdown
   fetch(`http://localhost:8080/api/board/${selectedBoardId}/section`)
@@ -428,30 +364,28 @@ function showUpdateForm(card, cardContainer) {
   const saveButton = document.createElement('button');
   saveButton.textContent = 'Save';
   saveButton.id = 'saveBtn';
-  saveButton.addEventListener('click', () => saveUpdatedCard(card.id));
+  saveButton.addEventListener('click', () => {
+    saveUpdatedCard(card.id);
+    // Restore the original card content and display it
+    cardContent.innerHTML = originalCardContent;
+  });
 
   const cancelButton = document.createElement('button');
   cancelButton.textContent = 'Cancel';
-  cancelButton.id = 'cancleBtn'; 
+  cancelButton.id = 'cancleBtn';
   cancelButton.addEventListener('click', () => {
-    // Restore the card details without re-rendering the board
-    cardContent.innerHTML = ''; // Clear existing content
-    renderCardDetails(card, cardContent);
+    // Restore the original card content and display it
+    cardContent.innerHTML = originalCardContent;
   });
 
-  cardContent.appendChild(document.createTextNode('Title: '));
   cardContent.appendChild(cardTitleInput);
-  cardContent.appendChild(document.createElement('br'));
-  cardContent.appendChild(document.createTextNode('Description: '));
+  cardContent.appendChild(document.createElement('br')); // New line
   cardContent.appendChild(cardDescriptionInput);
-  cardContent.appendChild(document.createElement('br'));
-  cardContent.appendChild(sectionLabel);
+  cardContent.appendChild(document.createElement('br')); // New line
   cardContent.appendChild(sectionSelect);
-  cardContent.appendChild(document.createElement('br'));
   cardContent.appendChild(saveButton);
   cardContent.appendChild(cancelButton);
 }
-
 
 
 function saveUpdatedCard(cardId) {
@@ -481,8 +415,8 @@ function saveUpdatedCard(cardId) {
     });
 }
 
-
-//Delete card *****************************************************************************************************
+//______________________________________________________________________________________________________________
+//Delete card 
 function deleteCard(cardId, cardContainer) {
   const shouldDelete = window.confirm("Are you sure you want to delete this card?");
   if (shouldDelete) {
@@ -502,11 +436,8 @@ function deleteCard(cardId, cardContainer) {
   }
 }
 
-
-
-
-
-//Create Board *****************************************************************************************************
+//______________________________________________________________________________________________________________
+//Create Board 
 function openCreateBoardModal() {
   const modal = document.getElementById('createBoardModal');
   modal.style.display = 'block';

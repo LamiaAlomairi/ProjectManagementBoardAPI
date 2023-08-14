@@ -1,4 +1,4 @@
-// When the page loads, fetch all the boards from the server and display them **************************************
+// When the page loads, fetch all the boards from the server and display them
 window.onload = function() {
   const selectOption = document.createElement('option');
   selectOption.textContent = 'Select board';
@@ -20,8 +20,8 @@ window.onload = function() {
 
   fetchBoards();
 };
-
-//Get all boards **************************************************************************************************
+//______________________________________________________________________________________________________________
+//Get all boards
 function fetchBoards() {
   return fetch('http://localhost:8080/api/board')
     .then(response => response.json())
@@ -56,6 +56,7 @@ function displayBoards(boards) {
   });
 }
 
+//Create defult board if database not has a board
 async function createDefaultBoard() {
   const newBoard = {
     title: 'Sprint Board 2023'
@@ -76,9 +77,8 @@ async function createDefaultBoard() {
     console.error('Error creating default board:', error);
   }
 }
-
-
-//Update title of board *******************************************************************************************
+//______________________________________________________________________________________________________________
+//Update title of board
 function updateBoardTitle() {
   const newBoardTitleInput = document.getElementById('newBoardTitle');
   const newTitle = newBoardTitleInput.value;
@@ -108,9 +108,8 @@ function updateBoardTitle() {
       console.error('Error updating board title:', error);
     });
 }
-
-
-//Get all sections ************************************************************************************************
+//______________________________________________________________________________________________________________
+//Get all sections
 function fetchSectionsAndCardsForBoard(boardId) {
   fetch(`http://localhost:8080/api/board/${boardId}/section`)
     .then(response => response.json())
@@ -154,7 +153,7 @@ function renderSectionsAndCards(sections) {
 
     boardContainer.appendChild(sectionContainer);
 
-    // Fetch and render cards for the current section and board ***************************************************
+    // Fetch and render cards for the current section and board 
     fetch(`http://localhost:8080/api/board/${selectedBoardId}/sections/${section.id}/cards`)
       .then(response => response.json())
       .then(cardsData => renderCardsInSection(cardsData, cardsContainer))
@@ -180,11 +179,12 @@ function renderCardsInSection(cardsData, cardsContainer) {
     cardIdElement.className = 'card-id';
 
     const idBold = document.createElement('span');
-    idBold.textContent = 'Card ID: ';
+    idBold.textContent = '#';
     idBold.style.fontWeight = 'bold';
 
     const idText = document.createElement('span');
     idText.textContent = card.id;
+    idText.style.fontWeight = 'bold';
 
     cardIdElement.appendChild(idBold);
     cardIdElement.appendChild(idText);
@@ -193,14 +193,10 @@ function renderCardsInSection(cardsData, cardsContainer) {
     const cardTitleElement = document.createElement('div');
     cardTitleElement.className = 'card-title';
 
-    const titleBold = document.createElement('span');
-    titleBold.textContent = 'Card Title: ';
-    titleBold.style.fontWeight = 'bold';
-
     const titleText = document.createElement('span');
     titleText.textContent = card.title;
+    titleText.style.fontWeight = 'bold';
 
-    cardTitleElement.appendChild(titleBold);
     cardTitleElement.appendChild(titleText);
 
     //For card description ***********************************
@@ -208,13 +204,13 @@ function renderCardsInSection(cardsData, cardsContainer) {
     cardDescriptionElement.className = 'card-description';
 
     const descriptionBold = document.createElement('span');
-    descriptionBold.textContent = 'Card Description: ';
-    descriptionBold.style.fontWeight = 'bold';
+    descriptionBold.textContent = 'Description: ';
 
     const descriptionText = document.createElement('span');
     descriptionText.textContent = card.description;
 
     cardDescriptionElement.appendChild(descriptionBold);
+    cardDescriptionElement.appendChild(document.createElement('br'));
     cardDescriptionElement.appendChild(descriptionText);
 
     cardContent.appendChild(cardIdElement);
@@ -231,7 +227,7 @@ function renderCardsInSection(cardsData, cardsContainer) {
 
     const deleteIcon = document.createElement('span');
     deleteIcon.className = 'delete-icon';
-    deleteIcon.innerHTML = 'X'; // Cross icon
+    deleteIcon.innerHTML = '&times'; // Cross icon
     deleteIcon.onclick = () => deleteCard(card.id, cardContainer);
 
     actionsContainer.appendChild(updateIcon);
@@ -291,8 +287,6 @@ function createCard(sectionId) {
     cardContainer.appendChild(cardContent);
     section.appendChild(cardContainer);
   }
-  
-  
 }
 
 //Save card in database
@@ -325,39 +319,16 @@ function saveCard(sectionId) {
     });
 }
 
-
-//Update card details *********************************************************************************************
-function renderCardDetails(card, cardContainer) {
-  const cardContent = document.createElement('div');
-  cardContent.className = 'card-content';
-
-  const cardIdElement = document.createElement('div');
-  cardIdElement.className = 'card-id';
-  cardIdElement.textContent = `Card ID: ${card.id}`;
-
-  const cardTitleElement = document.createElement('div');
-  cardTitleElement.className = 'card-title';
-  cardTitleElement.textContent = `Card Title: ${card.title}`;
-
-  const cardDescriptionElement = document.createElement('div');
-  cardDescriptionElement.className = 'card-description';
-  cardDescriptionElement.textContent = `Card Description: ${card.description}`;
-
-  const updateButton = document.createElement('button');
-  updateButton.textContent = 'Update';
-  updateButton.addEventListener('click', () => showUpdateForm(card, cardContainer));
-
-  cardContent.appendChild(cardIdElement);
-  cardContent.appendChild(cardTitleElement);
-  cardContent.appendChild(cardDescriptionElement);
-  cardContent.appendChild(updateButton);
-
-  cardContainer.appendChild(cardContent);
-}
-
+//______________________________________________________________________________________________________________
+//Update card details 
 function showUpdateForm(card, cardContainer) {
   const cardContent = cardContainer.querySelector('.card-content');
-  cardContent.innerHTML = ''; // Clear existing content
+
+  // Save the original card content
+  const originalCardContent = cardContent.innerHTML;
+
+  // Clear existing content
+  cardContent.innerHTML = '';
 
   const cardTitleInput = document.createElement('input');
   cardTitleInput.id = 'updateCardTitleInput';
@@ -393,14 +364,18 @@ function showUpdateForm(card, cardContainer) {
   const saveButton = document.createElement('button');
   saveButton.textContent = 'Save';
   saveButton.id = 'saveBtn';
-  saveButton.addEventListener('click', () => saveUpdatedCard(card.id));
+  saveButton.addEventListener('click', () => {
+    saveUpdatedCard(card.id);
+    // Restore the original card content and display it
+    cardContent.innerHTML = originalCardContent;
+  });
 
   const cancelButton = document.createElement('button');
   cancelButton.textContent = 'Cancel';
   cancelButton.id = 'cancleBtn';
   cancelButton.addEventListener('click', () => {
-    cardContainer.innerHTML = ''; // Remove the update form
-    renderCardDetails(card, cardContainer);
+    // Restore the original card content and display it
+    cardContent.innerHTML = originalCardContent;
   });
 
   cardContent.appendChild(cardTitleInput);
@@ -411,6 +386,7 @@ function showUpdateForm(card, cardContainer) {
   cardContent.appendChild(saveButton);
   cardContent.appendChild(cancelButton);
 }
+
 
 function saveUpdatedCard(cardId) {
   const updatedTitleInput = document.getElementById('updateCardTitleInput');
@@ -439,8 +415,8 @@ function saveUpdatedCard(cardId) {
     });
 }
 
-
-//Delete card *****************************************************************************************************
+//______________________________________________________________________________________________________________
+//Delete card 
 function deleteCard(cardId, cardContainer) {
   const shouldDelete = window.confirm("Are you sure you want to delete this card?");
   if (shouldDelete) {
@@ -460,11 +436,8 @@ function deleteCard(cardId, cardContainer) {
   }
 }
 
-
-
-
-
-//Create Board *****************************************************************************************************
+//______________________________________________________________________________________________________________
+//Create Board 
 function openCreateBoardModal() {
   const modal = document.getElementById('createBoardModal');
   modal.style.display = 'block';
