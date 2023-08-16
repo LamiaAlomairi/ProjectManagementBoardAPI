@@ -3,11 +3,16 @@ package com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Controllers;
 import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Models.Board;
 import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Models.Card;
 import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Models.Section;
+import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.RequestObject.BoardRequestObject;
+import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.ResponseObject.BoardResponseObject;
+import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.ResponseObject.CardResponse;
 import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Services.BoardService;
+import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Services.CardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -16,23 +21,27 @@ import java.util.List;
 public class BoardController {
     @Autowired
     BoardService boardService;
+    @Autowired
+    CardService cardService;
 
     /*******  Create Board  ******/
     @PostMapping
-    public Board createBoard(@RequestBody Board board) {
+    public ResponseEntity<String> createBoard(@RequestBody BoardRequestObject boardRequestObject){
         try {
-            return boardService.createBoard(board);
+            boardService.createBoard(boardRequestObject);
+            return ResponseEntity.ok("Board created successfully.");
         } catch (Exception e) {
-            System.err.println("Cannot create Board " + e.getMessage());
-            return null;
+            return ResponseEntity.badRequest().body("Cannot create board: " + e.getMessage());
         }
     }
 
     /*******  Get All Boards  ******/
     @GetMapping
-    public List<Board> getAllBoards() {
+    public List<BoardResponseObject> getAllBoards() {
         try {
-            return boardService.getAllBoards();
+            List<Board> boards = boardService.getAllBoards();
+            List<BoardResponseObject> objectList = BoardResponseObject.convertToResponseList(boards);
+            return objectList;
         } catch (Exception e) {
             System.err.println("Cannot get all Boards " + e.getMessage());
             return null;
@@ -41,9 +50,14 @@ public class BoardController {
 
     /*******  Get Board by id  ******/
     @GetMapping(value = "/{id}")
-    public Board getBoardById(@PathVariable Long id) {
+    public BoardResponseObject getBoardById(@PathVariable Long id) {
         try {
-            return boardService.getBoardById(id);
+            Board board = boardService.getBoardById(id);
+            if (board == null) {
+                System.err.println("board is not found ");
+                return null;
+            }
+            return BoardResponseObject.convertToResponse(board);
         } catch (Exception e) {
             System.err.println("Cannot get Board with this id " + e.getMessage());
             return null;
@@ -52,7 +66,7 @@ public class BoardController {
 
     /****** Update Board ******/
     @PutMapping("/{id}")
-    public Board updateBoard(@PathVariable Long id, @RequestBody Board update) {
+    public Board updateBoard(@PathVariable Long id, @RequestBody BoardRequestObject update) {
         try {
             return boardService.updateBoard(id, update);
         } catch (Exception e) {
@@ -74,17 +88,25 @@ public class BoardController {
     /****** Get sections in a selected Board ******/
     @GetMapping("/{boardId}/section")
     public List<Section> getAllSectionsInBoard(@PathVariable Long boardId) {
-        return boardService.getAllSectionsInBoard(boardId);
+        try{
+            return boardService.getAllSectionsInBoard(boardId);
+        }
+        catch (Exception e) {
+            System.err.println("Cannot get sections Board: " + e.getMessage());
+        }
+        return null;
     }
 
     /****** Get in a selected sections in a selected Board ******/
     @GetMapping("/{boardId}/sections/{sectionId}/cards")
-    public ResponseEntity<List<Card>> getCardsInSectionOfBoard(@PathVariable Long boardId, @PathVariable Long sectionId) {
-        List<Card> cards = boardService.getCardsInSectionOfBoard(boardId, sectionId);
-        if (cards == null) {
-            // Handle the case when the board or section is not found
-            return ResponseEntity.notFound().build();
+    public List<CardResponse> getCardsInSectionOfBoard(@PathVariable Long boardId, @PathVariable Long sectionId) {
+        try {
+            List<Card> cards = boardService.getCardsInSectionOfBoard(boardId, sectionId);
+            List<CardResponse> objectList = CardResponse.convertToResponseList(cards);
+            return objectList;
+        } catch (Exception e) {
+            System.err.println("Cannot get cards in section of board: " + e.getMessage());
+            return new ArrayList<>();
         }
-        return ResponseEntity.ok(cards);
     }
 }

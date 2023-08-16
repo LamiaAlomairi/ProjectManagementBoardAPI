@@ -38,7 +38,8 @@ function fetchBoards() {
       return [];
     });
 }
-
+//______________________________________________________________________________________________________________
+//Display all boards
 function displayBoards(boards) {
   const boardsList = document.getElementById('boardSelect');
   boardsList.innerHTML = '';
@@ -55,7 +56,7 @@ function displayBoards(boards) {
     boardsList.appendChild(boardItem);
   });
 }
-
+//______________________________________________________________________________________________________________
 //Create defult board if database not has a board
 async function createDefaultBoard() {
   const newBoard = {
@@ -71,11 +72,74 @@ async function createDefaultBoard() {
       body: JSON.stringify(newBoard)
     });
 
-    const createdBoard = await response.json();
-    console.log('Default board created:', createdBoard);
+    if (response.ok) {
+      const responseText = await response.text();  // Read the response as plain text
+      console.log('Response from server:', responseText);
+      
+      // Update the select option with the new board
+      const boardSelect = document.getElementById('boardSelect');
+      const newBoardOption = document.createElement('option');
+      newBoardOption.textContent = newBoard.title;
+      newBoardOption.value = responseText;  // Assuming responseText contains the new board ID
+      boardSelect.appendChild(newBoardOption);
+
+      console.log('Default board created.');
+    } else {
+      throw new Error('Board creation failed');
+    }
   } catch (error) {
     console.error('Error creating default board:', error);
   }
+}
+//______________________________________________________________________________________________________________
+// Function to create a new board
+function createNewBoard() {
+  const newBoardTitleInput = document.getElementById('newBoardTitleModal'); // Use the input field from the modal
+  const newBoardTitle = newBoardTitleInput.value;
+
+  if (newBoardTitle.trim() === '') {
+    alert('Please enter a valid board title.');
+    return;
+  }
+
+  const newBoard = {
+    title: newBoardTitle
+  };
+
+  fetch('http://localhost:8080/api/board', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(newBoard),
+  })
+    .then(response => {
+      if (response.ok) {
+        return response.text();  // Read the response as plain text
+      } else {
+        throw new Error('Board creation failed');
+      }
+    })
+    .then(responseText => {
+      // The responseText contains the plain text response
+      console.log('Response from server:', responseText);
+      
+      // Update the select option with the new board
+      const boardSelect = document.getElementById('boardSelect');
+      const newBoardOption = document.createElement('option');
+      newBoardOption.textContent = newBoardTitle;
+      newBoardOption.value = responseText;  // Assuming responseText contains the new board ID
+      boardSelect.appendChild(newBoardOption);
+
+      // Clear the input field and close the modal
+      newBoardTitleInput.value = '';
+      closeCreateBoardModal();
+
+      alert('Board is created.');
+    })
+    .catch(error => {
+      console.error('Error creating board:', error);
+    });
 }
 //______________________________________________________________________________________________________________
 //Update title of board
@@ -110,6 +174,18 @@ function updateBoardTitle() {
 }
 //______________________________________________________________________________________________________________
 //Get all sections
+// Event listener for when a board is selected from the dropdown
+boardSelect.addEventListener('change', () => {
+  selectedBoardId = boardSelect.value; // Save the selected board ID
+  if (selectedBoardId) {
+    fetchSectionsAndCardsForBoard(selectedBoardId);
+  } else {
+    const boardContainer = document.querySelector('.board-container');
+    boardContainer.innerHTML = '';
+  }
+});
+
+// Function to fetch sections and cards for a selected board
 function fetchSectionsAndCardsForBoard(boardId) {
   fetch(`http://localhost:8080/api/board/${boardId}/section`)
     .then(response => response.json())
@@ -117,10 +193,10 @@ function fetchSectionsAndCardsForBoard(boardId) {
       renderSectionsAndCards(data);
     })
     .catch(error => {
-      console.error('Error:', error);
+      console.error('Error fetching sections and cards:', error);
     });
 }
-
+//______________________________________________________________________________________________________________
 //Create section box
 function renderSectionsAndCards(sections) {
   const boardContainer = document.querySelector('.board-container');
@@ -162,7 +238,7 @@ function renderSectionsAndCards(sections) {
       });
   });
 }
-
+//______________________________________________________________________________________________________________
 //Create card box
 function renderCardsInSection(cardsData, cardsContainer) {
   cardsContainer.innerHTML = '';
@@ -239,9 +315,8 @@ function renderCardsInSection(cardsData, cardsContainer) {
     cardsContainer.appendChild(cardContainer);
   });
 }
-
-
-//Create button show box create card ******************************************************************************
+//______________________________________________________________________________________________________________
+//button to show box create card 
 function createCard(sectionId) {
   const section = document.querySelector(`.section[data-id="${sectionId}"]`);
   const existingCardForm = section.querySelector('.card-form');
@@ -271,7 +346,7 @@ function createCard(sectionId) {
     saveButton.addEventListener('click', () => saveCard(sectionId));
   
     const cancelButton = document.createElement('button');
-    cancelButton.id = 'cancleBtn';
+    cancelButton.id = 'cancelBtn';
     cancelButton.textContent = 'Cancel';
     cancelButton.addEventListener('click', () => {
       cardContainer.remove();
@@ -288,7 +363,7 @@ function createCard(sectionId) {
     section.appendChild(cardContainer);
   }
 }
-
+//______________________________________________________________________________________________________________
 //Save card in database
 function saveCard(sectionId) {
   const cardTitleInput = document.getElementById('cardTitleInput');
@@ -297,8 +372,8 @@ function saveCard(sectionId) {
   const newCard = {
     title: cardTitleInput.value,
     description: cardDescriptionInput.value,
-    section: { id: sectionId },
-    board: { id: selectedBoardId }, // Include the selected board ID
+    sectionId: sectionId, // Pass the section ID directly
+    boardId: selectedBoardId, // Include the selected board ID
   };
 
   fetch('http://localhost:8080/api/card', {
@@ -308,17 +383,28 @@ function saveCard(sectionId) {
     },
     body: JSON.stringify(newCard),
   })
-    .then(response => response.json())
-    .then(createdCard => {
-      if (createdCard) {
-        fetchSectionsAndCardsForBoard(selectedBoardId); // Refresh sections/cards
+    .then(response => {
+      if (response.ok) {
+        return response.text();  // Read the response as plain text
+      } else {
+        throw new Error('Card creation failed');
       }
+    })
+    .then(responseText => {
+      // The responseText contains the plain text response
+      console.log('Response from server:', responseText);
+
+      // Refresh sections/cards
+      fetchSectionsAndCardsForBoard(selectedBoardId);
+
+      // Clear the input fields
+      cardTitleInput.value = '';
+      cardDescriptionInput.value = '';
     })
     .catch(error => {
       console.error('Error creating card:', error);
     });
 }
-
 //______________________________________________________________________________________________________________
 //Update card details 
 function showUpdateForm(card, cardContainer) {
@@ -343,23 +429,37 @@ function showUpdateForm(card, cardContainer) {
   const sectionSelect = document.createElement('select');
   sectionSelect.id = 'updateSectionSelect';
 
-  // Fetch and populate the sections for the dropdown
-  fetch(`http://localhost:8080/api/board/${selectedBoardId}/section`)
-    .then(response => response.json())
-    .then(sections => {
-      sections.forEach(section => {
-        const option = document.createElement('option');
-        option.value = section.id;
-        option.textContent = section.name;
-        sectionSelect.appendChild(option);
-      });
+  // Function to fetch and populate sections in the dropdown
+  function populateSectionDropdown() {
+    // Clear existing options
+    sectionSelect.innerHTML = '';
 
-      // Pre-select the current section
-      sectionSelect.value = card.section.id;
-    })
-    .catch(error => {
-      console.error('Error fetching sections:', error);
-    });
+    fetch(`http://localhost:8080/api/board/${selectedBoardId}/section`)
+      .then(response => response.json())
+      .then(sections => {
+        if (Array.isArray(sections)) {
+          sections.forEach(section => {
+            const option = document.createElement('option');
+            option.value = section.id;
+            option.textContent = section.name;
+            sectionSelect.appendChild(option);
+          });
+
+          // Pre-select the current section if it exists
+          if (card.section && card.section.id) {
+            sectionSelect.value = card.section.id;
+          }
+        } else {
+          console.error('Invalid sections response:', sections);
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching sections:', error);
+      });
+  }
+
+  // Call the function to populate the section dropdown
+  populateSectionDropdown();
 
   const saveButton = document.createElement('button');
   saveButton.textContent = 'Save';
@@ -372,7 +472,7 @@ function showUpdateForm(card, cardContainer) {
 
   const cancelButton = document.createElement('button');
   cancelButton.textContent = 'Cancel';
-  cancelButton.id = 'cancleBtn';
+  cancelButton.id = 'cancelBtn';
   cancelButton.addEventListener('click', () => {
     // Restore the original card content and display it
     cardContent.innerHTML = originalCardContent;
@@ -383,20 +483,22 @@ function showUpdateForm(card, cardContainer) {
   cardContent.appendChild(cardDescriptionInput);
   cardContent.appendChild(document.createElement('br')); // New line
   cardContent.appendChild(sectionSelect);
+  cardContent.appendChild(document.createElement('br')); // New line
   cardContent.appendChild(saveButton);
   cardContent.appendChild(cancelButton);
 }
-
-
+//______________________________________________________________________________________________________________
+//Save the update card details
 function saveUpdatedCard(cardId) {
   const updatedTitleInput = document.getElementById('updateCardTitleInput');
   const updatedDescriptionInput = document.getElementById('updateCardDescriptionInput');
   const updatedSectionSelect = document.getElementById('updateSectionSelect');
+  const updatedSectionId = updatedSectionSelect.value; // Get the updated section ID
 
   const updatedCard = {
     title: updatedTitleInput.value,
     description: updatedDescriptionInput.value,
-    section: { id: updatedSectionSelect.value },
+    sectionId: updatedSectionId, // Include the updated section ID
   };
 
   fetch(`http://localhost:8080/api/card/${cardId}`, {
@@ -406,7 +508,13 @@ function saveUpdatedCard(cardId) {
     },
     body: JSON.stringify(updatedCard),
   })
-    .then(response => response.json())
+    .then(response => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw new Error(`Error updating card: ${response.statusText}`);
+      }
+    })
     .then(updatedCardData => {
       fetchSectionsAndCardsForBoard(selectedBoardId); // Refresh sections/cards
     })
@@ -414,7 +522,6 @@ function saveUpdatedCard(cardId) {
       console.error('Error updating card:', error);
     });
 }
-
 //______________________________________________________________________________________________________________
 //Delete card 
 function deleteCard(cardId, cardContainer) {
@@ -435,60 +542,17 @@ function deleteCard(cardId, cardContainer) {
       });
   }
 }
-
 //______________________________________________________________________________________________________________
-//Create Board 
+//Open the Form Modal to Create Board 
 function openCreateBoardModal() {
   const modal = document.getElementById('createBoardModal');
   modal.style.display = 'block';
 }
-
+//______________________________________________________________________________________________________________
+//Close create board Modale
 function closeCreateBoardModal() {
   const modal = document.getElementById('createBoardModal');
   modal.style.display = 'none';
   document.getElementById('newBoardTitleModal').value = ''; // Clear the input field in the modal
 }
 
-// Function to create a new board
-function createNewBoard() {
-  const newBoardTitleInput = document.getElementById('newBoardTitleModal'); // Use the input field from the modal
-  const newBoardTitle = newBoardTitleInput.value;
-
-  if (newBoardTitle.trim() === '') {
-    alert('Please enter a valid board title.');
-    return;
-  }
-  else{
-    alert('Board is created.');
-  }
-
-  const newBoard = {
-    title: newBoardTitle
-  };
-
-  fetch('http://localhost:8080/api/board', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(newBoard),
-  })
-    .then(response => response.json())
-    .then(createdBoard => {
-      if (createdBoard) {
-        // Update the select option with the new board
-        const boardSelect = document.getElementById('boardSelect');
-        const newBoardOption = document.createElement('option');
-        newBoardOption.textContent = createdBoard.title;
-        newBoardOption.value = createdBoard.id;
-        boardSelect.appendChild(newBoardOption);
-
-        // Clear the input field and close the modal
-        newBoardTitleInput.value = '';
-        closeCreateBoardModal();
-      }
-    })
-    .catch(error => {
-      console.error('Error creating board:', error);
-    });
-}

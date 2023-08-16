@@ -1,31 +1,62 @@
 package com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Services;
 
+import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Models.Board;
 import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Models.Card;
+import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Models.Section;
+import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Repositories.BoardRepository;
 import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Repositories.CardRepository;
+import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Repositories.SectionRepository;
+import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.RequestObject.CardRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CardService {
     @Autowired
     private CardRepository cardRepository;
+    @Autowired
+    private BoardRepository boardRepository;
+    @Autowired
+    private SectionRepository sectionRepository;
 
-    /*******  Create Card  ******/
-    public Card createCard(Card card) {
+    public String createCard(CardRequest cardRequest) {
         try {
-            return cardRepository.save(card);
+            Board board = null;
+            Section section = null;
+
+            // Find the specified Board if provided
+            if (cardRequest.getBoardId() != null) {
+                board = boardRepository.findById(cardRequest.getBoardId()).orElse(null);
+                if (board == null) {
+                    return "Board not found.";
+                }
+            }
+
+            // Find the specified Section if provided
+            if (cardRequest.getSectionId() != null) {
+                section = sectionRepository.findById(cardRequest.getSectionId()).orElse(null);
+                if (section == null) {
+                    return "Section not found.";
+                }
+            }
+
+            Card card = CardRequest.convert(cardRequest, board, section);
+
+            // Make sure the section is associated with the board
+            if (section != null) {
+                section.setBoard(board);
+                sectionRepository.save(section);
+            }
+
+            cardRepository.save(card);
+            return "Card created successfully.";
         } catch (Exception e) {
-            System.out.println("Cannot create Card " + e.getMessage());
-            return null;
+            return "An error occurred: " + e.getMessage();
         }
     }
 
-    /*******  Get All Card  ******/
     public List<Card> getAllCards() {
         try {
             return cardRepository.findAll();
@@ -35,35 +66,34 @@ public class CardService {
         }
     }
 
-    /*******  Get Card by id  ******/
     public Card getCardById(Long id) {
         try {
-            return cardRepository.findById(id).get();
-        }
-        catch (Exception e) {
-            System.out.println("Cannot get all Card with this id " + e.getMessage());
+            return cardRepository.findById(id).orElse(null);
+        } catch (Exception e) {
+            System.out.println("Cannot get Card with this id " + e.getMessage());
             return null;
         }
     }
 
-    /****** Update Card ******/
-    public Card updateCard(@PathVariable Long id, @RequestBody Card card) {
-        try {
-            Optional<Card> optionalCard = cardRepository.findById(id);
-            if (optionalCard.isPresent()) {
-                Card existingCard = optionalCard.get();
-                existingCard.setTitle(card.getTitle());
-                existingCard.setDescription(card.getDescription());
-                existingCard.setSection(card.getSection());
-                return cardRepository.save(existingCard);
+    public Card updateCard(Long id, CardRequest cardRequest) {
+        Card existingCard = cardRepository.findById(id).orElse(null);
+        if (existingCard != null) {
+            existingCard.setTitle(cardRequest.getTitle());
+            existingCard.setDescription(cardRequest.getDescription());
+
+            // Associate the new Section if sectionId is provided
+            if (cardRequest.getSectionId() != null) {
+                Section section = sectionRepository.findById(cardRequest.getSectionId()).orElse(null);
+                existingCard.setSection(section);
             }
-        } catch (Exception e) {
-            System.out.println("Cannot update Card: " + e.getMessage());
+
+            return cardRepository.save(existingCard);
+        } else {
+            System.out.println("Cannot update Card: Card not found");
+            return null;
         }
-        return null;
     }
 
-    /****** Delete Card ******/
     public void deleteCardById(Long id) {
         try {
             cardRepository.deleteById(id);

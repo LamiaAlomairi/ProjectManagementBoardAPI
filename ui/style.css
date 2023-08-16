@@ -1,6 +1,6 @@
 body {
   font-family: 'sans-serif';
-  background-color: #a4abbc;
+  background-color: #c1c9dd;
 }
 
 /*______________________________________________________________________________________________________________*/
@@ -38,7 +38,7 @@ body {
 
   /*Update board title*/
   /*Textbox style*/
-  #newBoardTitle {
+  #newBoardTitle, #newBoardTitleModal {
     font-size: 20px;
     font-family: 'sans-serif';
     padding: 8px; /* add internal spacing */
@@ -48,32 +48,35 @@ body {
     box-shadow: 0px 5px 0px rgba(0, 0, 0, 0.1); /* shadow effect */
     transition: box-shadow 0.3s ease; /* Transition effect on mouseover */
   }
-  #newBoardTitle:focus {
+  #newBoardTitle:focus, #newBoardTitleModal:focus {
     outline: none; /* remove the default point on focus */
     box-shadow: 0px 5px 0px rgba(0, 0, 0, 0.1); /* Increase effect when focusing */
   }
-  #newBoardTitle,
-  #updateBtn {
-    display: inline-block;
-    vertical-align: middle;
-    margin: -2px; /* remove any margins */
-  }
+  
   /*Button update title style*/
   #updateBtn {
+    background-color: #8b98b0;
+    border: 0 solid #E5E7EB;
+    width: 90px;
+    height: 40px;
+    color: #000000;
     font-size: 20px;
-    font-family: 'sans-serif';
-    padding: 8px 16px; /* Inner spacing for buttons */
-    border: none;
-    background-color: #f2f2f2;
-    box-shadow: 0px 5px 0px rgba(0, 0, 0, 0.1);
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    border-top-right-radius: 15px;
-    border-bottom-right-radius: 15px;
+    transform: rotate(-2deg);
   }
-  #updateBtn:hover {
-    background-color: #d3d1d193;
+  #updateBtn:after {
+    content: '';
+    position: absolute;
+    border: 1px solid #000000;
+    bottom: 5px;
+    left: 5px;
+    width: calc(100% - 1px);
+    height: calc(100% - 1px);
   }
+  #updateBtn:hover:after {
+    bottom: 2px;
+    left: 2px;
+  }
+
 /*______________________________________________________________________________________________________________*/
 /*Create board modal style*/
 .modal {
@@ -88,7 +91,7 @@ body {
 }
   /* Style for the modal content */
   .modal-content {
-    background-color: #f2f2f2;
+    background-color: #f6f6f6;
     margin: 15% auto;
     padding: 20px;
     border: 1px solid #888;
@@ -97,22 +100,6 @@ body {
     border-radius: 10px;
   }
 
-  /*Textbox style*/
-  #newBoardTitleModal {
-    font-size: 20px;
-    font-family: 'sans-serif';
-    padding: 8px; /* add internal spacing */
-    border: none;
-    background-color: #ebeaea;
-    width: auto;
-    box-shadow: 0px 5px 0px rgba(0, 0, 0, 0.1); /* shadow effect */
-    transition: box-shadow 0.3s ease; /* Transition effect on mouseover */
-    border-radius: 12px;
-  }
-  #newBoardTitleModal:focus {
-    outline: none; /* remove the default point on focus */
-    box-shadow: 0px 5px 0px rgba(0, 0, 0, 0.1); /* Increase effect when focusing */
-  }
     
   /* Style for the close button */
   .close {
@@ -160,7 +147,7 @@ body {
       font-size: 18px;
     }
 
-/*Dive where cards show **************/
+/*Div where cards show **************/
   .cards-container {
     margin-top: 10px;
   }
@@ -211,29 +198,9 @@ body {
         color: #aeb5c7;
         font-weight: bold;
       }
-
-      
-      #saveBtn, #cancleBtn, #createBtn {
-        font-size: 20px;
-        font-family: 'sans-serif';
-        padding: 8px; /* Inner spacing for buttons */
-        border: none;
-        background-color: #ebeaea;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-        border-bottom-left-radius: 15px;
-        border-bottom-right-radius: 15px;
-        padding-top:10px;
-        width: auto;
+      .card-add{
+        text-align: center;
       }
-      
-      #saveBtn:hover, #cancleBtn:hover, #createBtn:hover {
-        background-color: #d3d1d1d4;
-      }
-
-.card-add{
-  text-align: center;
-}
 
 
     #cardTitleInput,
@@ -242,5 +209,25 @@ body {
     #updateCardDescriptionInput,
     #updateSectionSelect{
       font-size: 20px;
-        font-family: 'sans-serif';
+      font-family: 'sans-serif';
+    }
+/*__________________________________________________________________________________________________________*/
+/*Button style*/
+    #saveBtn, #cancelBtn, #createBtn {
+      align-self: center;
+      background-color: transparent;
+      font-family: 'sans-serif';
+      font-size: 22px;
+      border-style: solid;
+      border-width: 2px;
+      outline: none;
+      border-bottom-left-radius: 15px 255px;
+      border-bottom-right-radius: 225px 15px;
+      border-top-left-radius: 255px 15px;
+      border-top-right-radius: 15px 225px;
+    }
+    
+    #saveBtn:hover, #cancelBtn:hover, #createBtn:hover {
+      box-shadow: rgba(0, 0, 0, .3) 2px 8px 8px -5px;
+      transform: translate3d(0, 2px, 0);
     }

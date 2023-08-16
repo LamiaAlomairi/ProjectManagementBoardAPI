@@ -4,11 +4,13 @@ import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Models.Board;
 import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Models.Card;
 import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Models.Section;
 import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Repositories.BoardRepository;
+import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.RequestObject.BoardRequestObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class BoardService {
@@ -18,8 +20,9 @@ public class BoardService {
     SectionService sectionService;
 
     /*******  Create Board  ******/
-    public Board createBoard(Board board) {
+    public ResponseEntity<String> createBoard(BoardRequestObject boardRequestObject) {
         try {
+            Board board = BoardRequestObject.convert(boardRequestObject);
             Board createdBoard = boardRepository.save(board);
 
             // Create three sections with specific names for the new board
@@ -30,10 +33,10 @@ public class BoardService {
                 section.setBoard(createdBoard);
                 sectionService.createSection(section);
             }
-            return createdBoard;
+
+            return ResponseEntity.ok("Board created successfully.");
         } catch (Exception e) {
-            System.out.println("Cannot create board " + e.getMessage());
-            return null;
+            return ResponseEntity.badRequest().body("Cannot create board: " + e.getMessage());
         }
     }
 
@@ -50,7 +53,7 @@ public class BoardService {
     /*******  Get Board by id  ******/
     public Board getBoardById(Long id) {
         try {
-            return boardRepository.findById(id).orElse(null);
+            return boardRepository.findById(id).get();
         } catch (Exception e) {
             System.out.println("Cannot get Board with this id " + e.getMessage());
             return null;
@@ -58,18 +61,21 @@ public class BoardService {
     }
 
     /****** Update Board ******/
-    public Board updateBoard(Long id, Board board) {
-        try {
-            Optional<Board> optionalBoard = boardRepository.findById(id);
-            if (optionalBoard.isPresent()) {
-                Board existingBoard = optionalBoard.get();
-                existingBoard.setTitle(board.getTitle());
+    public Board updateBoard(Long id, BoardRequestObject boardRequest) {
+        try{
+            Board existingBoard = boardRepository.findById(id).get();
+            if (existingBoard != null) {
+                existingBoard.setTitle(boardRequest.getTitle());
                 return boardRepository.save(existingBoard);
+            } else {
+                System.out.println("Cannot update Board: Board not found");
+                return null;
             }
-        } catch (Exception e) {
-            System.out.println("Cannot update Board: " + e.getMessage());
         }
-        return null;
+        catch (Exception e) {
+            System.out.println("Cannot update Board " + e.getMessage());
+            return null;
+        }
     }
 
     /****** Delete Board ******/
@@ -83,30 +89,37 @@ public class BoardService {
 
     /****** Get sections in a selected Board ******/
     public List<Section> getAllSectionsInBoard(Long boardId) {
-        Optional<Board> optionalBoard = boardRepository.findById(boardId);
-        if (optionalBoard.isPresent()) {
-            Board board = optionalBoard.get();
-            return board.getSections();
-        }
-        return null;
-    }
-
-    /****** Get in a selected sections in a selected Board ******/
-    public List<Card> getCardsInSectionOfBoard(Long boardId, Long sectionId) {
-        Optional<Board> optionalBoard = boardRepository.findById(boardId);
-        if (optionalBoard.isPresent()) {
-            Board board = optionalBoard.get();
-
-            // Check if the section belongs to the board
-            Section section = board.getSections().stream()
-                    .filter(s -> s.getId().equals(sectionId))
-                    .findFirst()
-                    .orElse(null);
-
-            if (section != null) {
-                return section.getCards();
+        try{
+            Board board = boardRepository.findById(boardId).get();
+            if (board != null) {
+                return board.getSections();
+            } else {
+                System.out.println("Cannot get sections Board: Board not found");
             }
         }
-        return null;
+        catch (Exception e) {
+            System.out.println("Cannot delete Board: " + e.getMessage());
+        }
+        return new ArrayList<>();
+    }
+
+
+    /****** Get in a selected sections in a selected Board ******/
+
+    public List<Card> getCardsInSectionOfBoard(Long boardId, Long sectionId) {
+        try {
+            Board board = boardRepository.findById(boardId).get();
+            if (board != null) {
+                for (Section section : board.getSections()) {
+                    if (section.getId().equals(sectionId)) {
+                        return section.getCards();
+                    }
+                }
+            }
+            return new ArrayList<>();
+        } catch (Exception e) {
+            System.out.println("Cannot get cards in section Board: " + e.getMessage());
+            return new ArrayList<>();
+        }
     }
 }

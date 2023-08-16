@@ -1,8 +1,11 @@
 package com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Controllers;
 
 import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Models.Card;
+import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.RequestObject.CardRequest;
+import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.ResponseObject.CardResponse;
 import com.ProjectManagementBoardAPI.ProjectManagementBoardAPI.Services.CardService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,42 +17,45 @@ public class CardController {
     @Autowired
     CardService cardService;
 
-    /*******  Create Card  ******/
     @PostMapping
-    public Card createCard(@RequestBody Card card) {
+    public String createCard(@RequestBody CardRequest cardRequest) {
         try {
-            return cardService.createCard(card);
+            return cardService.createCard(cardRequest);
         } catch (Exception e) {
-            System.err.println("Cannot create Card " + e.getMessage());
-            return null;
+            System.err.println("Cannot create Card: " + e.getMessage());
+            return "An error occurred while creating the card.";
         }
     }
 
-    /*******  Get All Cards  ******/
     @GetMapping
-    public List<Card> getAllCards() {
+    public List<CardResponse> getAllCards() {
         try {
-            return cardService.getAllCards();
+            List<Card> cards = cardService.getAllCards();
+            List<CardResponse> objectList = CardResponse.convertToResponseList(cards);
+            return objectList;
         } catch (Exception e) {
             System.err.println("Cannot get all Cards " + e.getMessage());
             return null;
         }
     }
 
-    /*******  Get Card by id  ******/
     @GetMapping(value = "/{id}")
-    public Card getCardById(@PathVariable Long id) {
+    public CardResponse getCardById(@PathVariable Long id) {
         try {
-            return cardService.getCardById(id);
+            Card card = cardService.getCardById(id);
+            if (card == null) {
+                System.err.println("Card not found");
+                return null;
+            }
+            return CardResponse.convertToResponse(card);
         } catch (Exception e) {
             System.err.println("Cannot get Card with this id " + e.getMessage());
             return null;
         }
     }
 
-    /****** Update Card ******/
     @PutMapping("/{id}")
-    public Card updateCard(@PathVariable Long id, @RequestBody Card card) {
+    public Card updateCard(@PathVariable Long id, @RequestBody CardRequest card) {
         try {
             return cardService.updateCard(id, card);
         } catch (Exception e) {
@@ -58,7 +64,6 @@ public class CardController {
         return null;
     }
 
-    /****** Delete Card ******/
     @DeleteMapping(value = "/{id}")
     public void deleteCardById(@PathVariable Long id) {
         try {
