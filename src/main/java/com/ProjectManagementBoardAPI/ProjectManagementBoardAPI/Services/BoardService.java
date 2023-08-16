@@ -20,7 +20,7 @@ public class BoardService {
     SectionService sectionService;
 
     /*******  Create Board  ******/
-    public ResponseEntity<String> createBoard(BoardRequestObject boardRequestObject) {
+    public Board createBoard(BoardRequestObject boardRequestObject) {
         try {
             Board board = BoardRequestObject.convert(boardRequestObject);
             Board createdBoard = boardRepository.save(board);
@@ -34,9 +34,9 @@ public class BoardService {
                 sectionService.createSection(section);
             }
 
-            return ResponseEntity.ok("Board created successfully.");
+            return createdBoard;
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Cannot create board: " + e.getMessage());
+            return null;
         }
     }
 

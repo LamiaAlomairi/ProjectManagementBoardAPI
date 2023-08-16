@@ -94,7 +94,7 @@ async function createDefaultBoard() {
 //______________________________________________________________________________________________________________
 // Function to create a new board
 function createNewBoard() {
-  const newBoardTitleInput = document.getElementById('newBoardTitleModal'); // Use the input field from the modal
+  const newBoardTitleInput = document.getElementById('newBoardTitleModal');
   const newBoardTitle = newBoardTitleInput.value;
 
   if (newBoardTitle.trim() === '') {
@@ -121,26 +121,46 @@ function createNewBoard() {
       }
     })
     .then(responseText => {
-      // The responseText contains the plain text response
       console.log('Response from server:', responseText);
-      
-      // Update the select option with the new board
-      const boardSelect = document.getElementById('boardSelect');
-      const newBoardOption = document.createElement('option');
-      newBoardOption.textContent = newBoardTitle;
-      newBoardOption.value = responseText;  // Assuming responseText contains the new board ID
-      boardSelect.appendChild(newBoardOption);
 
-      // Clear the input field and close the modal
-      newBoardTitleInput.value = '';
-      closeCreateBoardModal();
+      if (responseText === 'Board created successfully.') {
+        // Fetch the updated list of boards and update the select options
+        fetchBoards()
+          .then(data => {
+            const boardSelect = document.getElementById('boardSelect');
+            boardSelect.innerHTML = ''; // Clear the select options
 
-      alert('Board is created.');
+            const selectOption = document.createElement('option');
+            selectOption.textContent = 'Select board';
+            selectOption.disabled = true;
+            selectOption.selected = true;
+            boardSelect.appendChild(selectOption);
+
+            data.forEach(board => {
+              const boardItem = document.createElement('option');
+              boardItem.textContent = board.title;
+              boardItem.value = board.id;
+              boardSelect.appendChild(boardItem);
+            });
+
+            // Clear the input field and close the modal
+            newBoardTitleInput.value = '';
+            closeCreateBoardModal();
+
+            alert('Board is created.');
+          })
+          .catch(error => {
+            console.error('Error fetching boards:', error);
+          });
+      } else {
+        console.error('Error creating board:', responseText);
+      }
     })
     .catch(error => {
       console.error('Error creating board:', error);
     });
 }
+
 //______________________________________________________________________________________________________________
 //Update title of board
 function updateBoardTitle() {
@@ -190,6 +210,7 @@ function fetchSectionsAndCardsForBoard(boardId) {
   fetch(`http://localhost:8080/api/board/${boardId}/section`)
     .then(response => response.json())
     .then(data => {
+      // Assuming "data" is an array of sections, you can use it to render sections and cards
       renderSectionsAndCards(data);
     })
     .catch(error => {

@@ -26,10 +26,14 @@ public class BoardController {
 
     /*******  Create Board  ******/
     @PostMapping
-    public ResponseEntity<String> createBoard(@RequestBody BoardRequestObject boardRequestObject){
+    public ResponseEntity<Object> createBoard(@RequestBody BoardRequestObject boardRequestObject) {
         try {
-            boardService.createBoard(boardRequestObject);
-            return ResponseEntity.ok("Board created successfully.");
+            Board createdBoard = boardService.createBoard(boardRequestObject);
+            if (createdBoard != null) {
+                return ResponseEntity.ok(createdBoard);
+            } else {
+                return ResponseEntity.badRequest().body("Cannot create board.");
+            }
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Cannot create board: " + e.getMessage());
         }
