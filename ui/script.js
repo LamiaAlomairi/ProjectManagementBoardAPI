@@ -113,54 +113,31 @@ function createNewBoard() {
     },
     body: JSON.stringify(newBoard),
   })
-    .then(response => {
-      if (response.ok) {
-        return response.text();  // Read the response as plain text
+    .then(response => response.json())  // Parse the response as JSON
+    .then(createdBoard => {
+      console.log('Response from server:', createdBoard);
+
+      if (createdBoard.id) {  // Check if the response contains a valid board ID
+        // Update the select option with the new board
+        const boardSelect = document.getElementById('boardSelect');
+        const newBoardOption = document.createElement('option');
+        newBoardOption.textContent = newBoardTitle;
+        newBoardOption.value = createdBoard.id;
+        boardSelect.appendChild(newBoardOption);
+
+        // Clear the input field and close the modal
+        newBoardTitleInput.value = '';
+        closeCreateBoardModal();
+
+        alert('Board is created.');
       } else {
-        throw new Error('Board creation failed');
-      }
-    })
-    .then(responseText => {
-      console.log('Response from server:', responseText);
-
-      if (responseText === 'Board created successfully.') {
-        // Fetch the updated list of boards and update the select options
-        fetchBoards()
-          .then(data => {
-            const boardSelect = document.getElementById('boardSelect');
-            boardSelect.innerHTML = ''; // Clear the select options
-
-            const selectOption = document.createElement('option');
-            selectOption.textContent = 'Select board';
-            selectOption.disabled = true;
-            selectOption.selected = true;
-            boardSelect.appendChild(selectOption);
-
-            data.forEach(board => {
-              const boardItem = document.createElement('option');
-              boardItem.textContent = board.title;
-              boardItem.value = board.id;
-              boardSelect.appendChild(boardItem);
-            });
-
-            // Clear the input field and close the modal
-            newBoardTitleInput.value = '';
-            closeCreateBoardModal();
-
-            alert('Board is created.');
-          })
-          .catch(error => {
-            console.error('Error fetching boards:', error);
-          });
-      } else {
-        console.error('Error creating board:', responseText);
+        console.error('Error creating board:', createdBoard);
       }
     })
     .catch(error => {
       console.error('Error creating board:', error);
     });
 }
-
 //______________________________________________________________________________________________________________
 //Update title of board
 function updateBoardTitle() {
