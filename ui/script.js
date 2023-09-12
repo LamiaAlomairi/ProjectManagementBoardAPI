@@ -1,3 +1,9 @@
+const host = window.location.host;
+
+let url = 'http://localhost:8080/api/board';
+
+let cardurl = 'http://localhost:8080/api/card'
+
 // When the page loads, fetch all the boards from the server and display them
 window.onload = function() {
   const selectOption = document.createElement('option');
@@ -23,7 +29,7 @@ window.onload = function() {
 //______________________________________________________________________________________________________________
 //Get all boards
 function fetchBoards() {
-  return fetch('http://localhost:8080/api/board')
+  return fetch(url)
     .then(response => response.json())
     .then(data => {
       if (data.length === 0) {
@@ -64,7 +70,7 @@ async function createDefaultBoard() {
   };
 
   try {
-    const response = await fetch('http://localhost:8080/api/board', {
+    const response = await fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -106,7 +112,7 @@ function createNewBoard() {
     title: newBoardTitle
   };
 
-  fetch('http://localhost:8080/api/board', {
+  fetch(url, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -149,7 +155,7 @@ function updateBoardTitle() {
     return;
   }
 
-  fetch(`http://localhost:8080/api/board/${selectedBoardId}`, {
+  fetch(url+`/${selectedBoardId}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -184,7 +190,7 @@ boardSelect.addEventListener('change', () => {
 
 // Function to fetch sections and cards for a selected board
 function fetchSectionsAndCardsForBoard(boardId) {
-  fetch(`http://localhost:8080/api/board/${boardId}/section`)
+  fetch(url+`/${boardId}/section`)
     .then(response => response.json())
     .then(data => {
       // Assuming "data" is an array of sections, you can use it to render sections and cards
@@ -228,7 +234,7 @@ function renderSectionsAndCards(sections) {
     boardContainer.appendChild(sectionContainer);
 
     // Fetch and render cards for the current section and board 
-    fetch(`http://localhost:8080/api/board/${selectedBoardId}/sections/${section.id}/cards`)
+    fetch(url+`/${selectedBoardId}/sections/${section.id}/cards`)
       .then(response => response.json())
       .then(cardsData => renderCardsInSection(cardsData, cardsContainer))
       .catch(error => {
@@ -374,7 +380,7 @@ function saveCard(sectionId) {
     boardId: selectedBoardId, // Include the selected board ID
   };
 
-  fetch('http://localhost:8080/api/card', {
+  fetch(cardurl, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -432,7 +438,7 @@ function showUpdateForm(card, cardContainer) {
     // Clear existing options
     sectionSelect.innerHTML = '';
 
-    fetch(`http://localhost:8080/api/board/${selectedBoardId}/section`)
+    fetch(url+`/${selectedBoardId}/section`)
       .then(response => response.json())
       .then(sections => {
         if (Array.isArray(sections)) {
@@ -499,7 +505,7 @@ function saveUpdatedCard(cardId) {
     sectionId: updatedSectionId, // Include the updated section ID
   };
 
-  fetch(`http://localhost:8080/api/card/${cardId}`, {
+  fetch(cardurl+`/${cardId}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -525,7 +531,7 @@ function saveUpdatedCard(cardId) {
 function deleteCard(cardId, cardContainer) {
   const shouldDelete = window.confirm("Are you sure you want to delete this card?");
   if (shouldDelete) {
-    fetch(`http://localhost:8080/api/card/${cardId}`, {
+    fetch(cardurl+`/${cardId}`, {
       method: 'DELETE',
     })
       .then(response => {
