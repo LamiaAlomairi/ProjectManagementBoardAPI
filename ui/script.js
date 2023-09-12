@@ -2,7 +2,7 @@ const host = window.location.host;
 
 let url = 'http://localhost:8080/api/board';
 
-let cardurl = 'http://localhost:8080/api/card'
+let cardurl = 'http://localhost:8080/api/card';
 
 // When the page loads, fetch all the boards from the server and display them
 window.onload = function() {
