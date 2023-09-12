@@ -1,4 +1,5 @@
-const url = window.location.host;
+const port = 8080;
+const url = window.location.host + ":" + port;
 
 // When the page loads, fetch all the boards from the server and display them
 window.onload = function() {
